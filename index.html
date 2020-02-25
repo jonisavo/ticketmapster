@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="css/styles.css" />
     <link rel="stylesheet" href="./leaflet/leaflet.css" />
+    <link href="https://fonts.googleapis.com/css?family=Muli|Ovo&display=swap&subset=latin-ext" rel="stylesheet">
     <script src="./leaflet/leaflet.js"></script>
 </head>
 <body>
@@ -14,9 +15,11 @@
         <h1>Ticketmapster</h1>
     </header>
     <section id="settings">
+        <p>Anna sijainti tai anna sivuston paikantaa sinut</p>
         <input type="text" id="search_input">
         <button type="submit" id="submit_button">Etsi</button>
-        <button type="button" id="locate_button">Sijaintini</button>
+        <button type="button" id="locate_button">Paikanna minut</button>
+        <p id="search_results"></p>
         <table>
             <tr>
                 <td>Hakuehto</td>
@@ -28,6 +31,12 @@
     <div id="map"></div>
     <footer>
         <p>Ryhmä8</p>
+        <p>
+            <a href="https://leafletjs.com/" target="_blank">Leaflet</a>,
+            <a href="https://www.openstreetmap.org/" target="_blank">OpenStreetMap</a>,
+            <a href="https://developer.ticketmaster.com/products-and-docs/apis/discovery-api/v2/" target="_blank">Ticketmaster API</a>,
+            <a href="https://opencagedata.com/" target="_blank">OpenCageData Geocoding API</a>
+        </p>
     </footer>
 </div>
 
