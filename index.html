@@ -3,12 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <title>Ticketmapster</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="css/styles.css" />
     <link rel="stylesheet" href="./leaflet/leaflet.css" />
     <script src="./leaflet/leaflet.js"></script>
 </head>
 <body>
-    <div id="map" style="height: 500px"></div>
-    <script src="js/map.js"></script>
-    <script src="js/search.js"></script>
+<div id="page-container">
+    <header>
+        <h1>Ticketmapster</h1>
+    </header>
+    <section id="settings">
+        <input type="text" id="search_input">
+        <button type="submit" id="submit_button">Etsi</button>
+        <button type="button" id="locate_button">Sijaintini</button>
+        <table>
+            <tr>
+                <td>Hakuehto</td>
+                <td>Hakuehto</td>
+                <td>Hakuehto</td>
+            </tr>
+        </table>
+    </section>
+    <div id="map"></div>
+    <footer>
+        <p>Ryhmä8</p>
+    </footer>
+</div>
+
+<script src="js/map.js"></script>
+<script src="js/search.js"></script>
 </body>
 </html>
