@@ -64,6 +64,7 @@ function setStatusMessage(status) {
 
 function setCurrentLocation(latitude, longitude) {
     map.setView([latitude, longitude], 13);
+    // Tekee markerin käyttäjän sijaintiin. Jos se on olemassa, siirtää sitä.
     if (!currentmarker) {
         currentmarker = L.marker([latitude, longitude]);
         currentmarker.addTo(map)
