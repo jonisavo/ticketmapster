@@ -1,2 +1,2 @@
 # ticketmapster
-Webpage for browsing Ticketmaster events
+Web-sovellus Ticketmaster-tapahtumien löytämiseen ja selaamiseen.
