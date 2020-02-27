@@ -84,3 +84,17 @@ locate_button.addEventListener('click',evt => {locate()});
 
 let search_button = document.querySelector("#submit_button");
 search_button.addEventListener('click', evt => {search()});
+
+var input_field = document.getElementById("search_input");
+
+// Jos Enteriä painetaan input-laatikossa, tehdään haku.
+input_field.addEventListener("keyup", event => {
+    if(event.key === "Enter") {
+        // Jos tekstikentässä ei ole mitään, peruutetaan haku
+        if (input_field.value === "") {
+            return;
+        }
+        search_button.click();
+        event.preventDefault();
+    }
+});

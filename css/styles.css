@@ -44,7 +44,7 @@ table {
     box-sizing: border-box;
 }
 
-#input_section {
+#input_area {
     display: flex;
     align-items: center;
 }
