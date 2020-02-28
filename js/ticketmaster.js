@@ -50,6 +50,8 @@ function generateTicketmasterMarkers(response) {
     locations.forEach(location => {
         let marker = new MapsterMarker(location, 13);
         events.forEach(event => {
+            // Jostain syystä tämä tarkistus ei toimi, vaan kaikki tapahtumat siirtyvät silti markeriin.
+            // TODO Tämä täytyy korjata!
             if (event.location.lat === location.lat && event.location.lng === location.lng) {
                 marker.addEvent(event);
             }
