@@ -1,0 +1,9 @@
+.tiedot {
+    margin-bottom: 0.25rem;
+    padding: 0.5rem;
+    background-color: #d4ebf2;
+}
+
+#events {scroll: overflow;}
+
+.tiedotTiedossa p, .tiedotTiedossa a {margin: 0; padding: 0;}
