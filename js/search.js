@@ -1,3 +1,5 @@
+'use strict';
+
 let currentmarker = null;
 
 function locate() {

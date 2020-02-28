@@ -1,8 +1,11 @@
+/*
 navigator.geolocation.getCurrentPosition(getLocalWeather, positionError, {
   enableHighAccuracy: true,
   timeout: 5000,
   maximumAge: 0
 });
+
+ */
 
 function getLocalWeather(pos) {
   let crd = pos.coords;
