@@ -3,6 +3,7 @@ navigator.geolocation.getCurrentPosition(getLocalWeather, positionError, {
   timeout: 5000,
   maximumAge: 0
 });
+
 function getLocalWeather(pos) {
   let crd = pos.coords;
   let osoite = 'http://api.openweathermap.org/data/2.5/forecast?lat=' + crd.latitude + '&lon=' + crd.longitude + '&APPID=3f9c0f263c23c5f5c69f9ace9cc53244';

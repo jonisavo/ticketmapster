@@ -1,5 +1,6 @@
 body {
     margin: 0;
+    padding: 0;
 }
 
 #page-container {
@@ -25,6 +26,11 @@ header, footer {
 
 header {
     line-height: 5vh;
+    max-height: 10vh;
+}
+
+footer p {
+    margin: 1vh 0;
 }
 
 footer a {
@@ -51,11 +57,11 @@ table {
 
 #search_input {
     height: 3vh;
-    width: 20vh;
+    width: 20vw;
 }
 
-
 #submit_button, #locate_button {
+    margin-left: 0.5vw;
     height: 2.5rem;
 }
 
@@ -71,4 +77,24 @@ table {
 
 .tiedot {
     margin-bottom: 1rem;
+}
+
+@media only screen and (max-width: 600px) {
+    #page-container {
+        height: 100vh;
+    }
+
+    header, footer {
+        max-height: 15vh;
+    }
+
+    #settings {
+        width: 100%;
+        height: 35vh;
+    }
+
+    #map {
+        width: 100%;
+        height: 35vh;
+    }
 }
