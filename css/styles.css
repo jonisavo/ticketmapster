@@ -68,3 +68,7 @@ table {
     border-width: 2px;
     border-color: black;
 }
+
+.tiedot {
+    margin-bottom: 1rem;
+}
