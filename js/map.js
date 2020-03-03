@@ -49,19 +49,6 @@ const MapsterMarker = L.Marker.extend({
                     <p>${event.address}</p>
                     <a href="${event.url}" target="_blank">Hanki liput</a>
                 </details>`
-                /*
-                content += '<details class="popup-information"><summary>' + event.name + '</summary>' +
-                    '<img src=' + event.image + ' width="100%"><img>' +
-                    '<div class="tiedotTiedossa">' +
-                    '<h3>' + event.name + '</h3>' +
-                    event.classification + ': ' + event.genre + ', ' + event.subGenre +
-                    '<p>' + event.startDate + '</p>' +
-                    '<p>' + event.address + '</p>' +
-                    '<a href="' + event.url + '" target="_blank">Hanki liput</a>' +
-                    '</div>' +
-                    '</details>'
-
-                 */
             }});
         this.details = content;
         this.bindPopup(`

@@ -16,24 +16,39 @@ h1, h2, h3 {
 
 header, footer {
     width: 100%;
-    min-height: 10vh;
+    max-height: 10vh;
+    height: auto;
     padding: 0 5vh;
     background-color: dodgerblue;
     color: white;
+    text-align: center;
+    display: flex;
+    justify-content: space-between;
     background-image: linear-gradient(to right, dodgerblue, lightblue);
     box-sizing: border-box;
 }
-
 header {
     line-height: 5vh;
-    max-height: 10vh;
+}
+
+header ul {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+    list-style-type: none;
+}
+header li {
+    margin: 0;
+    padding: 0 1rem;
+    height: auto;
 }
 
 footer p {
     margin: 1vh 0;
 }
-
-footer a {
+header a, footer a {
     color: white;
 }
 
@@ -42,22 +57,37 @@ table {
 }
 
 #settings {
-    display: block;
-    width: 50%;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    width: 35%;
     height: 80vh;
     padding-left: 5vh;
     padding-top: 2vh;
     box-sizing: border-box;
 }
 
+#settings label {
+    width: 100%;
+    height: auto;
+}
+#settings #search_results {
+    margin: 0;
+    width: 100%;
+    height: auto;
+}
+#settings table {
+    width: 100%;
+}
+
 #input_area {
-    display: flex;
+    flex-direction: row;
     align-items: center;
 }
 
 #search_input {
     height: 3vh;
-    width: 20vw;
+    min-width: 20vw;
 }
 
 #submit_button, #locate_button {
@@ -66,7 +96,7 @@ table {
 }
 
 #map {
-    width: 45%;
+    width: 60%;
     height: 75vh;
     margin: auto;
     box-sizing: border-box;
@@ -79,7 +109,7 @@ table {
     margin-bottom: 1rem;
 }
 
-@media only screen and (max-width: 600px) {
+@media only screen and (max-width: 800px) {
     #page-container {
         height: 100vh;
     }
@@ -90,11 +120,18 @@ table {
 
     #settings {
         width: 100%;
-        height: 35vh;
+        height: 30vh;
     }
 
     #map {
         width: 100%;
-        height: 35vh;
+        height: 40vh;
+    }
+}
+
+@media only screen and (max-width: 600px) {
+    header ul {
+        flex-direction: column;
+        line-height: 2.5vh;
     }
 }
