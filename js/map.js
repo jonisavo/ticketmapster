@@ -42,7 +42,7 @@ const MapsterMarker = L.Marker.extend({
                 content += `
                 <details class="popup-information">
                     <summary>${event.name}</summary>
-                    <img src="${event.image}" width="100%">
+                    <img src="${event.image}" width="100%" alt="Tapahtuman kuva">
                     <h3>${event.name}</h3>
                     <p>${event.classification}: ${event.genre}, ${event.subGenre}</p>
                     <p>${event.startDate}</p>
@@ -55,7 +55,7 @@ const MapsterMarker = L.Marker.extend({
             <div id="popup-container">
                 <div id="popup-events">${this.details}</div>
                 <div id="popup-weather"><p>Lämpötilaa ladataan...</p></div>
-            </div>`, {minWidth: popupLeveys, maxHeight: popupKorkeus});
+            </div>`);
     },
 
     updatePopup: function () {

@@ -1,20 +1,97 @@
 'use strict';
 
-const popupLeveys = document.querySelector('#map').clientWidth * 0.5;
-const popupKorkeus = document.querySelector('#map').clientHeight * 0.55;
+let popupLeveys = document.querySelector('#map').clientWidth * 0.5;
+let popupKorkeus = document.querySelector('#map').clientHeight * 0.55;
 
 fetch('https://app.ticketmaster.com/discovery/v2/events.json?countryCode=FI&apikey=lFzFD4km6ABGdh9aye7qdAbL5yA1AHkb')
-    .then(function(response){
+    .then(response => {
         return response.json();
-    }).then(function(json){
-    generateTicketmasterMarkers(json);
-}).catch(function(error){
-    console.log(error);
-});
+    }).then(json => {
+        generateTicketmasterMarkers(json);
+    }).catch(error => {
+        console.log(error);
+    });
+
+fetch('https://api.hel.fi/linkedevents/v1/event/')
+    .then(response => {
+        return response.json();
+    }).then(json => {
+        return getHelsinkiEventLocations(json);
+    }).then(data => {
+        console.log(data);
+        let json = data[0];
+        let sijainnit = data[1];
+        let osoitteet = data[2];
+        generateHelsinkiEventMarkers(json,sijainnit,osoitteet);
+    }).catch(error => {
+        console.log(error);
+    });
+
+function getHelsinkiEventLocations(events) {
+    let locations = [];
+    let addresses = [];
+    // TODO odota että kaikki fetchit ovat valmiit
+    events.data.forEach(event => {
+        fetch(event.location['@id'])
+            .then(response => {
+                return response.json();
+            }).then(json => {
+            sijainti2(json);
+        }).catch(error => {
+            console.log(error);
+        });
+    });
+    function sijainti2(place) {
+        locations.push(L.latLng(place.position.coordinates[1],place.position.coordinates[0]));
+        addresses.push(place.street_address.fi);
+    }
+
+    return [events,locations,addresses];
+}
+
+function generateHelsinkiEventMarkers(json, locations, addresses) {
+    let events = [];
+    let foundevents = json.data;
+    // Muutetaan API:sta tulleet JSON-muotoiset eventit Event-luokan olioiksi
+    //foundevents.forEach((event, index) => {
+    for (let i = 0; i < foundevents.length; i++) {
+        let event = foundevents[i];
+        let evt = new MapsterEvent({
+            id: event.id,
+            name: 'test',
+            location: locations[i],
+            image: 'http://placekitten.com/200/300',
+            classification: 'test',
+            genre: 'test',
+            subGenre: 'test',
+            startDate: event.start_time,
+            address: addresses[i],
+            url: 'test'
+        });
+        console.log(evt);
+        events.push(evt);
+    }
+    // Luodaan markerit sijaintien perusteella
+    locations.forEach(location => {
+        console.log(`Tehdään marker sijaintiin ${location}`);
+        let marker = new MapsterMarker(location, 13);
+        events.forEach(event => {
+            if (event.location.lat === location.lat && event.location.lng === location.lng) {
+                marker.addEvent(event);
+            }
+        });
+        // Napataan markeriin lämpötilat
+        marker.fetchTemperature();
+        // Lisätään se karttaan
+        marker.addTo(map);
+        // Ja rakennetaan sen popup
+        marker.generatePopup();
+    });
+}
 
 // Luo Leaflet-karttaan markerit Ticketmasterin API:sta tulleen vastauksen avulla
 function generateTicketmasterMarkers(response) {
-    console.log(response);
+    //console.log(response);
     let events = [];
     let locations = [];
     let foundevents = response._embedded.events;
@@ -50,8 +127,6 @@ function generateTicketmasterMarkers(response) {
     locations.forEach(location => {
         let marker = new MapsterMarker(location, 13);
         events.forEach(event => {
-            // Jostain syystä tämä tarkistus ei toimi, vaan kaikki tapahtumat siirtyvät silti markeriin.
-            // TODO Tämä täytyy korjata!
             if (event.location.lat === location.lat && event.location.lng === location.lng) {
                 marker.addEvent(event);
             }
@@ -64,62 +139,3 @@ function generateTicketmasterMarkers(response) {
         marker.generatePopup();
     });
 }
-
-/*
-function generateMarkers(response) {
-    console.log(response);
-    let totuus = false;
-    let markerit = [];
-    let sisalto = [];
-    let longlat = [];
-    let oikea = 0;
-    for (let a = 0; a < response._embedded.events.length; ++a) {
-        let event = response._embedded.events[a];
-        const long = event._embedded.venues[0].location.longitude;
-        const lat = event._embedded.venues[0].location.latitude;
-        const kuvasrc =
-            '<details class="tiedot"><summary>' + event.name + '</summary>' +
-                '<img src=' + event.images[0].url + ' width="100%"><img>' +
-                '<div class="tiedotTiedossa">' +
-                    '<h3>' + event.name + '</h3>' +
-                    event.classifications[0].segment.name + ': ' + event.classifications[0].genre.name + ', ' + event.classifications[0].subGenre.name +
-                    '<p>' + event.dates.start.localDate + '</p>' +
-                    '<p>' + event._embedded.venues[0].address.line1 + '</p>' +
-                    '<a href="' + event.url + '" target="_blank">Hanki liput</a>' +
-                '</div>' +
-            '</details>'
-        if (longlat.length != 0) {
-            let koordinaatit = {
-                "long": long,
-                "lat": lat
-            };
-            for (let b = 0; b < longlat.length; ++b) {
-                if (longlat[b].lat == koordinaatit.lat && longlat[b].long == koordinaatit.long) {
-                    totuus = true;
-                    oikea = b;
-                }
-            }
-            if (!totuus) {
-                longlat.push({"long": long, "lat": lat});
-            }
-        } else {
-            longlat.push({"long": long, "lat": lat});
-        }
-
-        if (totuus) {
-            sisalto[oikea] += kuvasrc;
-        } else {
-            sisalto.push(kuvasrc);
-        }
-        totuus = false;
-    }
-    for (let c = 0; c < sisalto.length; ++c) {
-        //console.log(longlat[c].lat + ' and ' + longlat[c].long);
-        const marker = new MapsterMarker([longlat[c].lat, longlat[c].long], 13).addTo(map);
-        marker.fetchTemperature();
-        marker.bindPopup(`<div id="events">${sisalto[c]}</div><div>Lorem ipsum dolor sit amet, consectetur adipisci elit, sed eiusmod tempor incidunt ut </div>`, {minWidth: popupLeveys, maxHeight: popupKorkeus});
-        markerit.push(marker);
-    }
-}
-
- */
