@@ -17,46 +17,42 @@ fetch('https://api.hel.fi/linkedevents/v1/event/')
         return response.json();
     }).then(json => {
         return getHelsinkiEventLocations(json);
-    }).then(data => {
-        console.log(data);
-        let json = data[0];
-        let sijainnit = data[1];
-        let osoitteet = data[2];
-        generateHelsinkiEventMarkers(json,sijainnit,osoitteet);
     }).catch(error => {
         console.log(error);
     });
 
+// Hakee Helsingin tapahtumien sijainnit ja sitten kutsuu generateHelsinkiEventMarkers-funktiota.
 function getHelsinkiEventLocations(events) {
     let locations = [];
     let addresses = [];
-    // TODO odota että kaikki fetchit ovat valmiit
+    let location_fetches = [];
     events.data.forEach(event => {
-        fetch(event.location['@id'])
-            .then(response => {
-                return response.json();
-            }).then(json => {
-            sijainti2(json);
-        }).catch(error => {
-            console.log(error);
-        });
+        location_fetches.push(
+            // Tehdään kyselyitä tapahtumien sijainneista
+            fetch(event.location['@id'])
+                .then(response => {
+                    return response.json();
+                })
+                .then(json => {
+                    locations.push(L.latLng(json.position.coordinates[1],json.position.coordinates[0]));
+                    addresses.push(json.street_address.fi);
+                }).catch(error => {
+                    console.log(error);
+                })
+        );
     });
-    function sijainti2(place) {
-        locations.push(L.latLng(place.position.coordinates[1],place.position.coordinates[0]));
-        addresses.push(place.street_address.fi);
-    }
-
-    return [events,locations,addresses];
+    // Odotetaan kunnes kaikki sijainnit tiedetään, sitten suoritetaan markereiden teko
+    Promise.all(location_fetches).then(function() {
+        generateHelsinkiEventMarkers(events,locations,addresses)
+    });
 }
 
+// Luo Leaflet-karttaan markerit Helsingin API:sta tulleen vastauksen perusteella
 function generateHelsinkiEventMarkers(json, locations, addresses) {
     let events = [];
-    let foundevents = json.data;
     // Muutetaan API:sta tulleet JSON-muotoiset eventit Event-luokan olioiksi
-    //foundevents.forEach((event, index) => {
-    for (let i = 0; i < foundevents.length; i++) {
-        let event = foundevents[i];
-        let evt = new MapsterEvent({
+    json.data.forEach((event, i) => {
+        events.push(new MapsterEvent({
             id: event.id,
             name: 'test',
             location: locations[i],
@@ -67,13 +63,12 @@ function generateHelsinkiEventMarkers(json, locations, addresses) {
             startDate: event.start_time,
             address: addresses[i],
             url: 'test'
-        });
-        console.log(evt);
-        events.push(evt);
-    }
+        }));
+    });
     // Luodaan markerit sijaintien perusteella
+    // TODO Markerit luodaan onnistuneesti, mutta tapahtumat eivät löydy niistä. Jokin on siis pielessä.
     locations.forEach(location => {
-        console.log(`Tehdään marker sijaintiin ${location}`);
+        //console.log(`Tehdään marker sijaintiin ${location}`);
         let marker = new MapsterMarker(location, 13);
         events.forEach(event => {
             if (event.location.lat === location.lat && event.location.lng === location.lng) {
@@ -89,7 +84,7 @@ function generateHelsinkiEventMarkers(json, locations, addresses) {
     });
 }
 
-// Luo Leaflet-karttaan markerit Ticketmasterin API:sta tulleen vastauksen avulla
+// Luo Leaflet-karttaan markerit Ticketmasterin API:sta tulleen vastauksen perusteella
 function generateTicketmasterMarkers(response) {
     //console.log(response);
     let events = [];

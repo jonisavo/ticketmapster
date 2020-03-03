@@ -46,6 +46,7 @@ const MapsterMarker = L.Marker.extend({
     },
 
     // Rakentaa markerin popupin.
+    // TODO kaikki tieto ei välttämättä löydy, ja sen vuoksi tulisi käyttää if-lauseita palautuksen tarkistamiseen
     generatePopup: function () {
         let content = "";
         this.events.forEach(event => {
