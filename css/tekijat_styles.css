@@ -1,0 +1,26 @@
+main {
+    width: 100%;
+    min-height: 80vh;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+section {
+    display: block;
+    width: 280px;
+    max-height: 70vh;
+    border-radius: 10px;
+    background-color: dodgerblue;
+    color: white;
+}
+section h1 {
+    text-align: center;
+}
+section img {
+    display: block;
+    height: 15rem;
+    width: auto;
+    margin: auto;
+}

@@ -1,23 +1,33 @@
 'use strict';
 
+// Tehdään kartta
 let map = L.map('map').setView([60.171972,24.941496], 12);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+}).addTo(map);
 
+// MapsterMarker on L.Markerin alaluokka, joka sisältää tapahtuma-olioita.
 const MapsterMarker = L.Marker.extend({
 
     temperature: null,
     events: [],
     details: null,
 
+    // Lisää tapahtuman markeriin, mikäli sen nimistä tapahtumaa ei ole tai muuta
+    // tapahtumaa ei löydy, jolla on sama id.
     addEvent: function (eventToAdd) {
         let will_add = true;
         this.events.forEach(event => {
-           if (eventToAdd.id === event.id) {
+           if (eventToAdd.id === event.id || eventToAdd.name === event.name) {
                will_add = false;
            }
         });
         if (will_add) { this.events.push(eventToAdd); }
     },
 
+    // Hakee markerin sijainnissa olevan lämpötilaennusteen ja päivittää sitten
+    // popupin automaattisesti.
+    // TODO koko lämpötilaennusteen hakeminen. this.temperature voisi sisältää taulukon, jossa on 5 "sääoliota".
     fetchTemperature: function() {
         let lat = this.getLatLng().lat;
         let lng = this.getLatLng().lng;
@@ -35,6 +45,7 @@ const MapsterMarker = L.Marker.extend({
             });
     },
 
+    // Rakentaa markerin popupin.
     generatePopup: function () {
         let content = "";
         this.events.forEach(event => {
@@ -58,6 +69,10 @@ const MapsterMarker = L.Marker.extend({
             </div>`);
     },
 
+    // Päivittää markerin popupin.
+    // Tätä täytyy kutsua mikäli markerin details tai temperature -muuttujia
+    // muutetaan.
+    // TODO koko lämpötilaennusteen piirtäminen popupiin.
     updatePopup: function () {
         this.setPopupContent(`
             <div id="popup-container">
@@ -69,6 +84,7 @@ const MapsterMarker = L.Marker.extend({
 
 });
 
+// Luokka tapahtumille, jotka sisällytetään MapsterMarker-olioihin.
 class MapsterEvent {
     constructor(props) {
         this.id = props.id;
@@ -83,7 +99,3 @@ class MapsterEvent {
         this.url = props.url;
     }
 }
-
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-}).addTo(map);
