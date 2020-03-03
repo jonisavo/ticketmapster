@@ -27,6 +27,7 @@ const MapsterMarker = L.Marker.extend({
 
     // Hakee markerin sijainnissa olevan lämpötilaennusteen ja päivittää sitten
     // popupin automaattisesti.
+    // TODO koko lämpötilaennusteen hakeminen. this.temperature voisi sisältää taulukon, jossa on 5 "sääoliota".
     fetchTemperature: function() {
         let lat = this.getLatLng().lat;
         let lng = this.getLatLng().lng;
@@ -71,6 +72,7 @@ const MapsterMarker = L.Marker.extend({
     // Päivittää markerin popupin.
     // Tätä täytyy kutsua mikäli markerin details tai temperature -muuttujia
     // muutetaan.
+    // TODO koko lämpötilaennusteen piirtäminen popupiin.
     updatePopup: function () {
         this.setPopupContent(`
             <div id="popup-container">
