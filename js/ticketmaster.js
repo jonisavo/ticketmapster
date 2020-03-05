@@ -1,8 +1,5 @@
 'use strict';
 
-let popupLeveys = document.querySelector('#map').clientWidth * 0.5;
-let popupKorkeus = document.querySelector('#map').clientHeight * 0.55;
-
 fetch('https://app.ticketmaster.com/discovery/v2/events.json?countryCode=FI&apikey=lFzFD4km6ABGdh9aye7qdAbL5yA1AHkb')
     .then(response => {
         return response.json();

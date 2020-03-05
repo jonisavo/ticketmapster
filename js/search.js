@@ -1,7 +1,5 @@
 'use strict';
 
-let currentmarker = null;
-
 function locate() {
     navigator.geolocation.getCurrentPosition(pos => {
             reverse_geocode(pos.coords.latitude,pos.coords.longitude);
@@ -64,6 +62,7 @@ function setStatusMessage(status) {
     result_p.innerHTML = status
 }
 
+let currentmarker = null;
 function setCurrentLocation(latitude, longitude) {
     map.setView([latitude, longitude], 13);
     // Tekee markerin käyttäjän sijaintiin. Jos se on olemassa, siirtää sitä.

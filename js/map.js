@@ -6,6 +6,14 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
 }).addTo(map);
 
+// Siirretään karttaa aina popupia avattaessa
+map.addEventListener("popupopen", popup => {
+    let pan_location = map.project(popup.target._popup._latlng);
+    // Siirretään karttaa hieman alemmas
+    pan_location.y -= popup.target._popup._container.clientHeight/1.25;
+    map.panTo(map.unproject(pan_location), {animate: true});
+});
+
 // MapsterMarker on L.Markerin alaluokka, joka sisältää tapahtuma-olioita.
 const MapsterMarker = L.Marker.extend({
 
@@ -63,11 +71,19 @@ const MapsterMarker = L.Marker.extend({
                 </details>`
             }});
         this.details = content;
-        this.bindPopup(`
+        let popup = L.popup({
+            minWidth: document.querySelector('#map').clientWidth * 0.3,
+            maxWidth: document.querySelector('#map').clientWidth * 0.45,
+            minHeight: document.querySelector('#map').clientHeight * 0.35,
+            maxHeight: document.querySelector('#map').clientHeight * 0.55
+        });
+        popup.setContent(`
             <div id="popup-container">
                 <div id="popup-events">${this.details}</div>
                 <div id="popup-weather"><p>Lämpötilaa ladataan...</p></div>
             </div>`);
+        popup.update();
+        this.bindPopup(popup);
     },
 
     // Päivittää markerin popupin.
@@ -87,16 +103,16 @@ const MapsterMarker = L.Marker.extend({
 
 // Luokka tapahtumille, jotka sisällytetään MapsterMarker-olioihin.
 class MapsterEvent {
-    constructor(props) {
-        this.id = props.id;
-        this.name = props.name;
-        this.location = props.location;
-        this.image = props.image;
-        this.classification = props.classification;
-        this.genre = props.genre;
-        this.subGenre = props.subGenre;
-        this.startDate = props.startDate;
-        this.address = props.address;
-        this.url = props.url;
+    constructor(options) {
+        this.id = options.id;
+        this.name = options.name;
+        this.location = options.location;
+        this.image = options.image;
+        this.classification = options.classification;
+        this.genre = options.genre;
+        this.subGenre = options.subGenre;
+        this.startDate = options.startDate;
+        this.address = options.address;
+        this.url = options.url;
     }
 }
