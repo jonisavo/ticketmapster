@@ -109,10 +109,13 @@ table {
     margin-bottom: 1rem;
 }
 
+
+
 @media only screen and (max-width: 800px) {
     #page-container {
         min-height: 100vh;
     }
+
 
     header {
         max-height: 15vh;

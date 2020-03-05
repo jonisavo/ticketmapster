@@ -6,6 +6,14 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
 }).addTo(map);
 
+class MapsterWeather {
+    constructor(props) {
+        this.minTemp = props.minTemp;
+        this.maxTemp = props.maxTemp;
+        this.time = props.time;
+    }
+}
+
 // Siirretään karttaa aina popupia avattaessa
 map.addEventListener("popupopen", popup => {
     let pan_location = map.project(popup.target._popup._latlng);
@@ -17,7 +25,15 @@ map.addEventListener("popupopen", popup => {
 // MapsterMarker on L.Markerin alaluokka, joka sisältää tapahtuma-olioita.
 const MapsterMarker = L.Marker.extend({
 
-    temperature: null,
+    //Weather-lista viidelle päivälle.
+    weather: [
+        new MapsterWeather({minTemp: null, maxTemp: null, time: null}),
+        new MapsterWeather({minTemp: null, maxTemp: null, time: null}),
+        new MapsterWeather({minTemp: null, maxTemp: null, time: null}),
+        new MapsterWeather({minTemp: null, maxTemp: null, time: null}),
+        new MapsterWeather({minTemp: null, maxTemp: null, time: null}),
+    ],
+
     events: [],
     details: null,
 
@@ -45,8 +61,23 @@ const MapsterMarker = L.Marker.extend({
                 return vastaus.json();
             })
             .then(json => {
-                this.temperature = json.list[0].main.temp - 273.15;
-                this.updatePopup();
+                //Haetaan API:sta säätietoja sekä ajat. Lisätään weather-listaan.
+                let x = 0;
+                for (let i = 0; i < this.weather.length; i++) {
+                    this.weather[i].minTemp = (json.list[x].main.temp_min -
+                        273.15).toFixed(1);
+                    this.weather[i].maxTemp = (json.list[x].main.temp_max -
+                        273.15).toFixed(1);
+                    //Otetaan unix-ajasta päivämäärä.
+                    let unixTimeStamp = json.list[x].dt;
+                    const date = new Date(unixTimeStamp * 1000);
+                    const month = date.getMonth();
+                    const day = date.getDate();
+                    this.weather[i].time = day + '.' + month;
+                    //Päivitetään popup.
+                    this.updatePopup();
+                    x = x + 8;
+                }
             })
             .catch(error => {
                 console.log(error);
@@ -94,7 +125,15 @@ const MapsterMarker = L.Marker.extend({
         this.setPopupContent(`
             <div id="popup-container">
                 <div id="popup-events">${this.details}</div>
-                <div id="popup-weather"><p>Lämpötila on ${this.temperature}</p></div>
+                <div id="popup-weather">
+                <ul>
+                <li> <h4> ${this.weather[0].time} </h4> <p> min ${this.weather[0].minTemp} </p> max ${this.weather[0].maxTemp}</li>
+                <li> <h4> ${this.weather[1].time} </h4> <p> min ${this.weather[1].minTemp} </p> max ${this.weather[1].maxTemp}</li>
+                <li> <h4> ${this.weather[2].time} </h4> <p> min ${this.weather[2].minTemp} </p> max ${this.weather[2].maxTemp}</li>
+                <li> <h4> ${this.weather[3].time} </h4> <p> min ${this.weather[3].minTemp} </p> max ${this.weather[3].maxTemp}</li>
+                <li> <h4> ${this.weather[4].time} </h4> <p> min ${this.weather[4].minTemp} </p> max ${this.weather[4].maxTemp}</li>
+                </ul>
+                </div>
             </div>`
         )
     },
