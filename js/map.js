@@ -1,5 +1,6 @@
 'use strict';
 
+let currentMarker = null;
 let targetMarker = null;
 let currentRoute = null;
 
@@ -185,10 +186,10 @@ class MapsterEvent {
 }
 
 function makeRoute() {
-    if (currentmarker != null) {
+    if (currentMarker != null) {
         if (!currentRoute) {
             currentRoute = L.Routing.control({
-                waypoints: [currentmarker.getLatLng(), targetMarker.getLatLng()],
+                waypoints: [currentMarker.getLatLng(), targetMarker.getLatLng()],
                 // Poistetaan reitin tekemät markerit
                 createMarker: function (i,waypoint,n) {
                     return null;
@@ -196,7 +197,7 @@ function makeRoute() {
             });
             currentRoute.addTo(map);
         } else {
-            currentRoute.setWaypoints([currentmarker.getLatLng(), targetMarker.getLatLng()]);
+            currentRoute.setWaypoints([currentMarker.getLatLng(), targetMarker.getLatLng()]);
             currentRoute.show();
         }
         targetMarker.closePopup();
