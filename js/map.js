@@ -25,6 +25,12 @@ map.addEventListener("popupopen", popup => {
     map.panTo(map.unproject(pan_location), {animate: true});
 });
 
+// Karttaa klikkaaminen asettaa markerin
+map.addEventListener("dblclick", evt => {
+    setCurrentLocation(evt.latlng.lat, evt.latlng.lng);
+    reverse_geocode(evt.latlng.lat, evt.latlng.lng)
+});
+
 // MapsterMarker on L.Markerin alaluokka, joka sisältää tapahtuma-olioita.
 const MapsterMarker = L.Marker.extend({
 
@@ -54,7 +60,6 @@ const MapsterMarker = L.Marker.extend({
 
     // Hakee markerin sijainnissa olevan lämpötilaennusteen ja päivittää sitten
     // popupin automaattisesti.
-    // TODO koko lämpötilaennusteen hakeminen. this.temperature voisi sisältää taulukon, jossa on 5 "sääoliota".
     fetchTemperature: function() {
         let lat = this.getLatLng().lat;
         let lng = this.getLatLng().lng;
@@ -106,10 +111,16 @@ const MapsterMarker = L.Marker.extend({
             }});
         this.details = content;
         let popup = L.popup({
+            /*
             minWidth: document.querySelector('#map').clientWidth * 0.3,
             maxWidth: document.querySelector('#map').clientWidth * 0.45,
             minHeight: document.querySelector('#map').clientHeight * 0.35,
             maxHeight: document.querySelector('#map').clientHeight * 0.55
+             */
+            minWidth: map.getSize().x * 0.3,
+            maxWidth: map.getSize().x * 0.45,
+            minHeight: map.getSize().y * 0.35,
+            maxHeight: map.getSize().y * 0.55
         });
         popup.setContent(`
             <div id="popup-container">
@@ -123,13 +134,12 @@ const MapsterMarker = L.Marker.extend({
     // Päivittää markerin popupin.
     // Tätä täytyy kutsua mikäli markerin details tai temperature -muuttujia
     // muutetaan.
-    // TODO koko lämpötilaennusteen piirtäminen popupiin.
     updatePopup: function () {
         // Piirretään tapahtumat
         let content = `
         <div id="popup-container">
             <div id="popup-events">${this.details}</div>
-            <div id="popup-routing"><a href="#" onclick="routeToMarker()">Reitti tänne</a></div>
+            <div id="popup-routing"><a href="#" onclick="makeRoute()">Reitti tänne</a></div>
             <div id="popup-weather">
                 <ul>`;
         // Piirretään sää
@@ -174,10 +184,16 @@ class MapsterEvent {
     }
 }
 
-function routeToMarker() {
+function makeRoute() {
     if (currentmarker != null) {
         if (!currentRoute) {
-            currentRoute = L.Routing.control({waypoints: [currentmarker.getLatLng(), targetMarker.getLatLng()]});
+            currentRoute = L.Routing.control({
+                waypoints: [currentmarker.getLatLng(), targetMarker.getLatLng()],
+                // Poistetaan reitin tekemät markerit
+                createMarker: function (i,waypoint,n) {
+                    return null;
+                },
+            });
             currentRoute.addTo(map);
         } else {
             currentRoute.setWaypoints([currentmarker.getLatLng(), targetMarker.getLatLng()]);
