@@ -40,15 +40,14 @@
 }
 #popup-weather p{
     padding: 0 0.5rem;
+    text-align: center;
 }
 
 #maxTemp{
     color: #222222;
-    display: flex;
 }
 #minTemp{
     color: #777777;
-    display: flex;
 }
 
 h4{

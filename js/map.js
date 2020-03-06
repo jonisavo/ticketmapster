@@ -126,7 +126,10 @@ const MapsterMarker = L.Marker.extend({
                 const date = new Date(unixTimeStamp * 1000);
                 const month = date.getMonth() + 1;
                 const day = date.getDate();
-                this.weather[i].time = day + '.' + month;
+                const weekDayNum = date.getDay();
+                const days = ['SU', 'MA', 'TI', 'KE', 'TO', 'PE', 'LA'];
+                const weekDay = days[weekDayNum];
+                this.weather[i].time = weekDay + ' ' + day + '.' + month;
 
                 //Haetaan API:sta säätyypin kuva.
                 this.weather[i].weatherIcon = json.list[x].weather[0].icon;
