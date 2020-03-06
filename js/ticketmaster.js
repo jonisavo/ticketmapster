@@ -1,6 +1,6 @@
 'use strict';
 
-fetch('https://app.ticketmaster.com/discovery/v2/events.json?countryCode=FI&apikey=lFzFD4km6ABGdh9aye7qdAbL5yA1AHkb')
+fetch('https://app.ticketmaster.com/discovery/v2/events.json?size=100&countryCode=FI&apikey=lFzFD4km6ABGdh9aye7qdAbL5yA1AHkb')
     .then(response => {
         return response.json();
     }).then(json => {
@@ -92,7 +92,7 @@ function generateHelsinkiEventMarkers(json, locations, addresses) {
 
 // Luo Leaflet-karttaan markerit Ticketmasterin API:sta tulleen vastauksen perusteella
 function generateTicketmasterMarkers(response) {
-    //console.log(response);
+    console.log(response);
     let events = [];
     let locations = [];
     let foundevents = response._embedded.events;

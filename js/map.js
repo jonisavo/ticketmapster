@@ -1,5 +1,8 @@
 'use strict';
 
+let targetMarker = null;
+let currentRoute = null;
+
 // Tehdään kartta
 let map = L.map('map').setView([60.171972,24.941496], 12);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -126,6 +129,7 @@ const MapsterMarker = L.Marker.extend({
         let content = `
         <div id="popup-container">
             <div id="popup-events">${this.details}</div>
+            <div id="popup-routing"><a href="#" onclick="routeToMarker()">Reitti tänne</a></div>
             <div id="popup-weather">
                 <ul>`;
         // Piirretään sää
@@ -144,6 +148,11 @@ const MapsterMarker = L.Marker.extend({
             </div>
         </div>
         `;
+
+        this.addEventListener('click', evt => {
+           targetMarker = evt.target;
+        });
+
         this.setPopupContent(content)
     },
 
@@ -162,5 +171,20 @@ class MapsterEvent {
         this.startDate = options.startDate;
         this.address = options.address;
         this.url = options.url;
+    }
+}
+
+function routeToMarker() {
+    if (currentmarker != null) {
+        if (!currentRoute) {
+            currentRoute = L.Routing.control({waypoints: [currentmarker.getLatLng(), targetMarker.getLatLng()]});
+            currentRoute.addTo(map);
+        } else {
+            currentRoute.setWaypoints([currentmarker.getLatLng(), targetMarker.getLatLng()]);
+            currentRoute.show();
+        }
+        targetMarker.closePopup();
+    } else {
+        alert("Sinulla ei ole sijaintia voi ei")
     }
 }
