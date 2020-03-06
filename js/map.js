@@ -15,6 +15,7 @@ class MapsterWeather {
         this.minTemp = props.minTemp;
         this.maxTemp = props.maxTemp;
         this.time = props.time;
+        this.weatherIcon = props.weatherIcon;
     }
 }
 
@@ -55,11 +56,11 @@ const MapsterMarker = L.Marker.extend({
 
     //Weather-lista viidelle päivälle.
     weather: [
-        new MapsterWeather({minTemp: null, maxTemp: null, time: null}),
-        new MapsterWeather({minTemp: null, maxTemp: null, time: null}),
-        new MapsterWeather({minTemp: null, maxTemp: null, time: null}),
-        new MapsterWeather({minTemp: null, maxTemp: null, time: null}),
-        new MapsterWeather({minTemp: null, maxTemp: null, time: null}),
+        new MapsterWeather({minTemp: null, maxTemp: null, time: null, weatherIcon: null}),
+        new MapsterWeather({minTemp: null, maxTemp: null, time: null, weatherIcon: null}),
+        new MapsterWeather({minTemp: null, maxTemp: null, time: null, weatherIcon: null}),
+        new MapsterWeather({minTemp: null, maxTemp: null, time: null, weatherIcon: null}),
+        new MapsterWeather({minTemp: null, maxTemp: null, time: null, weatherIcon: null}),
     ],
 
     events: [],
@@ -70,9 +71,9 @@ const MapsterMarker = L.Marker.extend({
     addEvent: function (eventToAdd) {
         let will_add = true;
         this.events.forEach(event => {
-           if (eventToAdd.id === event.id || eventToAdd.name === event.name) {
-               will_add = false;
-           }
+            if (eventToAdd.id === event.id || eventToAdd.name === event.name) {
+                will_add = false;
+            }
         });
         if (will_add) { this.events.push(eventToAdd); }
     },
@@ -84,31 +85,60 @@ const MapsterMarker = L.Marker.extend({
         let lng = this.getLatLng().lng;
         let osoite = 'http://api.openweathermap.org/data/2.5/forecast?lat=' + lat + '&lon=' + lng + '&APPID=3f9c0f263c23c5f5c69f9ace9cc53244';
         fetch(osoite)
-            .then(vastaus => {
-                return vastaus.json();
-            })
-            .then(json => {
-                // Haetaan API:sta säätietoja sekä ajat. Lisätään weather-listaan.
-                let x = 0;
-                for (let i = 0; i < this.weather.length; i++) {
-                    this.weather[i].minTemp = (json.list[x].main.temp_min -
-                        273.15).toFixed(1);
-                    this.weather[i].maxTemp = (json.list[x].main.temp_max -
-                        273.15).toFixed(1);
-                    // Otetaan unix-ajasta päivämäärä.
-                    let unixTimeStamp = json.list[x].dt;
-                    const date = new Date(unixTimeStamp * 1000);
-                    const month = date.getMonth();
-                    const day = date.getDate();
-                    this.weather[i].time = day + '.' + month;
-                    // Päivitetään popup.
-                    this.updatePopup();
-                    x = x + 8;
-                }
-            })
-            .catch(error => {
-                console.log(error);
-            });
+        .then(vastaus => {
+            return vastaus.json();
+        })
+        .then(json => {
+            //Haetaan API:sta säätietoja sekä ajat. Lisätään weather-listaan.
+            let maxTemp;
+            let minTemp;
+            let x = 0;
+            for (let i = 0; i < this.weather.length; i++) {
+
+                //Katsotaan päivien lämpötiloista isoimmat ja pienimmät.
+                maxTemp = Math.max(
+                    json.list[x].main.temp_max,
+                    json.list[1+x].main.temp_max,
+                    json.list[2+x].main.temp_max,
+                    json.list[3+x].main.temp_max,
+                    json.list[4+x].main.temp_max,
+                    json.list[5+x].main.temp_max,
+                    json.list[6+x].main.temp_max,
+                    json.list[7+x].main.temp_max,);
+
+                minTemp = Math.min(
+                    json.list[x].main.temp_min,
+                    json.list[1+x].main.temp_min,
+                    json.list[2+x].main.temp_min,
+                    json.list[3+x].main.temp_min,
+                    json.list[4+x].main.temp_min,
+                    json.list[5+x].main.temp_min,
+                    json.list[6+x].main.temp_min,
+                    json.list[7+x].main.temp_min,);
+
+                //Sijoitetaan listaan minimi ja maximi lämpötilat.
+                //API:sta tulevat lämpötilat ovat kelvineinä joten muutetaan myös celciuksiksi.
+                this.weather[i].minTemp = (minTemp - 273.15).toFixed(1);
+                this.weather[i].maxTemp = (maxTemp - 273.15).toFixed(1);
+
+                //Otetaan unix-ajasta päivämäärä.
+                let unixTimeStamp = json.list[x].dt;
+                const date = new Date(unixTimeStamp * 1000);
+                const month = date.getMonth() + 1;
+                const day = date.getDate();
+                this.weather[i].time = day + '.' + month;
+
+                //Haetaan API:sta säätyypin kuva.
+                this.weather[i].weatherIcon = json.list[x].weather[0].icon;
+
+                //Päivitetään popup.
+                this.updatePopup();
+                x += 8;
+            }
+        })
+        .catch(error => {
+            console.log(error);
+        });
     },
 
     // Rakentaa markerin popupin.
@@ -118,15 +148,15 @@ const MapsterMarker = L.Marker.extend({
         this.events.forEach(event => {
             if (event.location.lat === this.getLatLng().lat && event.location.lng === this.getLatLng().lng) {
                 content += `
-                <details class="popup-information">
-                    <summary>${event.name}</summary>
-                    <img src="${event.image}" width="100%" alt="Tapahtuman kuva">
-                    <h3>${event.name}</h3>
-                    <p>${event.classification}: ${event.genre}, ${event.subGenre}</p>
-                    <p>${event.startDate}</p>
-                    <p>${event.address}</p>
-                    <a href="${event.url}" target="_blank">Hanki liput</a>
-                </details>`
+               <details class="popup-information">
+                   <summary>${event.name}</summary>
+                   <img src="${event.image}" width="100%" alt="Tapahtuman kuva">
+                   <h3>${event.name}</h3>
+                   <p>${event.classification}: ${event.genre}, ${event.subGenre}</p>
+                   <p>${event.startDate}</p>
+                   <p>${event.address}</p>
+                   <a href="${event.url}" target="_blank">Hanki liput</a>
+               </details>`
             }});
         this.details = content;
         let popup = L.popup({
@@ -135,10 +165,10 @@ const MapsterMarker = L.Marker.extend({
             maxHeight: map.getSize().y * 0.6
         });
         popup.setContent(`
-            <div id="popup-container">
-                <div id="popup-events">${this.details}</div>
-                <div id="popup-weather"><p>Lämpötilaa ladataan...</p></div>
-            </div>`);
+           <div id="popup-container">
+               <div id="popup-events">${this.details}</div>
+               <div id="popup-weather"><p>Lämpötilaa ladataan...</p></div>
+           </div>`);
         popup.update();
         this.bindPopup(popup);
 
@@ -154,27 +184,28 @@ const MapsterMarker = L.Marker.extend({
     updatePopup: function () {
         // Piirretään tapahtumat
         let content = `
-        <div id="popup-container">
-            <div id="popup-events">${this.details}</div>
-            <div id="popup-routing"><a href="#" onclick="makeRoute()">Reitti tänne</a></div>
-            <div id="popup-weather">
-                <ul>`;
+       <div id="popup-container">
+           <div id="popup-events">${this.details}</div>
+           <div id="popup-routing"><a href="#" onclick="makeRoute()">Reitti tänne</a></div>
+           <div id="popup-weather">
+               <ul>`;
         // Piirretään sää
         for (let i = 0; i < this.weather.length; i++) {
             content += `
-                    <li>
-                        <h4>${this.weather[i].time}</h4>
-                        <p>min ${this.weather[i].minTemp}°C</p> 
-                        <p>max ${this.weather[i].maxTemp}°C</p>
-                    </li>            
-            `;
+                   <li>
+                       <h4>${this.weather[i].time}</h4>  
+                       <img src="http://openweathermap.org/img/wn/${this.weather[i].weatherIcon}.png">
+                       <p id="maxTemp">${this.weather[i].maxTemp}°C</p>
+                       <p id="minTemp">${this.weather[i].minTemp}°C</p>
+                   </li>           
+           `;
         }
         // Päätetään popup
         content += `
-                </ul>
-            </div>
-        </div>
-        `;
+               </ul>
+           </div>
+       </div>
+       `;
 
         this.setPopupContent(content)
     },
