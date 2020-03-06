@@ -49,26 +49,41 @@ function generateHelsinkiEventMarkers(json, locations, addresses) {
     let events = [];
     // Muutetaan API:sta tulleet JSON-muotoiset eventit Event-luokan olioiksi
     json.data.forEach((event, i) => {
-        events.push(new MapsterEvent({
+        console.log(event);
+        let evt = new MapsterEvent({
             id: event.id,
-            name: 'test',
+            name: event.name.fi,
             location: locations[i],
-            image: 'http://placekitten.com/200/300',
-            classification: 'test',
-            genre: 'test',
-            subGenre: 'test',
+            image: null,
+            classification: null,
+            genre: null,
+            subGenre: null,
+            description: null,
             startDate: event.start_time,
             address: addresses[i],
-            url: 'test'
-        }));
+            url: null
+        });
+        if (event.images != null && event.images.length !== 0) {
+            evt.image = event.images[0].url;
+        }
+        if (event.info_url != null) {
+            evt.url = event.info_url.fi
+        }
+        if (event.short_description != null) {
+            evt.description = event.short_description.fi;
+        }
+        events.push(evt);
     });
     // Luodaan markerit sijaintien perusteella
     // TODO Markerit luodaan onnistuneesti, mutta tapahtumat eivät löydy niistä. Jokin on siis pielessä.
+    console.log(events);
     locations.forEach(location => {
         //console.log(`Tehdään marker sijaintiin ${location}`);
         let marker = new MapsterMarker(location, 13);
         events.forEach(event => {
             if (event.location.lat === location.lat && event.location.lng === location.lng) {
+                console.log(`Lisätään event sijaintiin ${location}:`);
+                console.log(event);
                 marker.addEvent(event);
             }
         });
