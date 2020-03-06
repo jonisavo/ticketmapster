@@ -11,6 +11,7 @@ class MapsterWeather {
         this.minTemp = props.minTemp;
         this.maxTemp = props.maxTemp;
         this.time = props.time;
+        this.weatherIcon = props.weatherIcon;
     }
 }
 
@@ -27,11 +28,11 @@ const MapsterMarker = L.Marker.extend({
 
     //Weather-lista viidelle päivälle.
     weather: [
-        new MapsterWeather({minTemp: null, maxTemp: null, time: null}),
-        new MapsterWeather({minTemp: null, maxTemp: null, time: null}),
-        new MapsterWeather({minTemp: null, maxTemp: null, time: null}),
-        new MapsterWeather({minTemp: null, maxTemp: null, time: null}),
-        new MapsterWeather({minTemp: null, maxTemp: null, time: null}),
+        new MapsterWeather({minTemp: null, maxTemp: null, time: null, weatherIcon: null}),
+        new MapsterWeather({minTemp: null, maxTemp: null, time: null, weatherIcon: null}),
+        new MapsterWeather({minTemp: null, maxTemp: null, time: null, weatherIcon: null}),
+        new MapsterWeather({minTemp: null, maxTemp: null, time: null, weatherIcon: null}),
+        new MapsterWeather({minTemp: null, maxTemp: null, time: null, weatherIcon: null}),
     ],
 
     events: [],
@@ -61,22 +62,53 @@ const MapsterMarker = L.Marker.extend({
                 return vastaus.json();
             })
             .then(json => {
-                // Haetaan API:sta säätietoja sekä ajat. Lisätään weather-listaan.
+                //Haetaan API:sta säätietoja sekä ajat. Lisätään weather-listaan.
+                let maxTemp;
+                let minTemp;
                 let x = 0;
                 for (let i = 0; i < this.weather.length; i++) {
-                    this.weather[i].minTemp = (json.list[x].main.temp_min -
-                        273.15).toFixed(1);
-                    this.weather[i].maxTemp = (json.list[x].main.temp_max -
-                        273.15).toFixed(1);
-                    // Otetaan unix-ajasta päivämäärä.
+
+                    //Katsotaan päivien lämpötiloista isoimmat ja pienimmät.
+                    maxTemp = Math.max(
+                        json.list[x].main.temp_max,
+                        json.list[1+x].main.temp_max,
+                        json.list[2+x].main.temp_max,
+                        json.list[3+x].main.temp_max,
+                        json.list[4+x].main.temp_max,
+                        json.list[5+x].main.temp_max,
+                        json.list[6+x].main.temp_max,
+                        json.list[7+x].main.temp_max,);
+
+                    minTemp = Math.min(
+                        json.list[x].main.temp_min,
+                        json.list[1+x].main.temp_min,
+                        json.list[2+x].main.temp_min,
+                        json.list[3+x].main.temp_min,
+                        json.list[4+x].main.temp_min,
+                        json.list[5+x].main.temp_min,
+                        json.list[6+x].main.temp_min,
+                        json.list[7+x].main.temp_min,);
+
+                    //Sijoitetaan listaan minimi ja maximi lämpötilat.
+                    //API:sta tulevat lämpötilat ovat kelvineinä joten muutetaan myös celciuksiksi.
+                    this.weather[i].minTemp = (minTemp - 273.15).toFixed(1);
+                    this.weather[i].maxTemp = (maxTemp - 273.15).toFixed(1);
+
+                    //Otetaan unix-ajasta päivämäärä.
                     let unixTimeStamp = json.list[x].dt;
                     const date = new Date(unixTimeStamp * 1000);
-                    const month = date.getMonth();
+                    const month = date.getMonth() + 1;
                     const day = date.getDate();
                     this.weather[i].time = day + '.' + month;
-                    // Päivitetään popup.
+
+                    //Haetaan API:sta säätyypin kuva.
+                    this.weather[i].weatherIcon = json.list[x].weather[0].icon;
+
+                    //Päivitetään popup.
                     this.updatePopup();
-                    x = x + 8;
+
+                    x += 8;
+
                 }
             })
             .catch(error => {
@@ -132,9 +164,10 @@ const MapsterMarker = L.Marker.extend({
         for (let i = 0; i < this.weather.length; i++) {
             content += `
                     <li>
-                        <h4>${this.weather[i].time}</h4>
-                        <p>min ${this.weather[i].minTemp}°C</p> 
-                        <p>max ${this.weather[i].maxTemp}°C</p>
+                        <h4>${this.weather[i].time}</h4>   
+                        <img src="http://openweathermap.org/img/wn/${this.weather[i].weatherIcon}.png">
+                        <p id="maxTemp">${this.weather[i].maxTemp}°C</p>
+                        <p id="minTemp">${this.weather[i].minTemp}°C</p>
                     </li>            
             `;
         }
@@ -164,3 +197,4 @@ class MapsterEvent {
         this.url = options.url;
     }
 }
+

@@ -36,8 +36,27 @@
     height: 100%;
     border: 1px solid #000;
     margin: 0.2em;
+    background-color: #d4ebf2;
+}
+
+#popup-weather p{
+    padding: 0 0.5rem;
+}
+
+#maxTemp{
+    color: #222222;
+    display: flex;
+}
+#minTemp{
+    color: #777777;
+    display: flex;
 }
 
 h4{
-    margin: 8px 0px;
+    margin: 8px 0 0 0;
+}
+
+img{
+    width: 40px;
+    height: 40px;
 }
