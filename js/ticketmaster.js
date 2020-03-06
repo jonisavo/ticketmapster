@@ -1,6 +1,6 @@
 'use strict';
 
-fetch('https://app.ticketmaster.com/discovery/v2/events.json?countryCode=FI&apikey=lFzFD4km6ABGdh9aye7qdAbL5yA1AHkb')
+fetch('https://app.ticketmaster.com/discovery/v2/events.json?size=100&countryCode=FI&apikey=lFzFD4km6ABGdh9aye7qdAbL5yA1AHkb')
     .then(response => {
         return response.json();
     }).then(json => {
@@ -49,23 +49,34 @@ function generateHelsinkiEventMarkers(json, locations, addresses) {
     let events = [];
     // Muutetaan API:sta tulleet JSON-muotoiset eventit Event-luokan olioiksi
     json.data.forEach((event, i) => {
-        events.push(new MapsterEvent({
+        let evt = new MapsterEvent({
             id: event.id,
-            name: 'test',
+            name: event.name.fi,
             location: locations[i],
-            image: 'http://placekitten.com/200/300',
-            classification: 'test',
-            genre: 'test',
-            subGenre: 'test',
+            image: null,
+            classification: null,
+            genre: null,
+            subGenre: null,
+            description: null,
             startDate: event.start_time,
             address: addresses[i],
-            url: 'test'
-        }));
+            url: null
+        });
+        if (event.images != null && event.images.length !== 0) {
+            evt.image = event.images[0].url;
+        }
+        if (event.info_url != null) {
+            evt.url = event.info_url.fi
+        }
+        if (event.short_description != null) {
+            evt.description = event.short_description.fi;
+        }
+        events.push(evt);
     });
     // Luodaan markerit sijaintien perusteella
-    // TODO Markerit luodaan onnistuneesti, mutta tapahtumat eivät löydy niistä. Jokin on siis pielessä.
+    console.log(locations);
     locations.forEach(location => {
-        //console.log(`Tehdään marker sijaintiin ${location}`);
+        console.log(`Tehdään marker sijaintiin ${location}`);
         let marker = new MapsterMarker(location, 13);
         events.forEach(event => {
             if (event.location.lat === location.lat && event.location.lng === location.lng) {
@@ -92,7 +103,7 @@ function generateHelsinkiEventMarkers(json, locations, addresses) {
 
 // Luo Leaflet-karttaan markerit Ticketmasterin API:sta tulleen vastauksen perusteella
 function generateTicketmasterMarkers(response) {
-    //console.log(response);
+    console.log(response);
     let events = [];
     let locations = [];
     let foundevents = response._embedded.events;

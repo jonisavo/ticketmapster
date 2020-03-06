@@ -62,13 +62,12 @@ function setStatusMessage(status) {
     result_p.innerHTML = status
 }
 
-let currentmarker = null;
 function setCurrentLocation(latitude, longitude) {
     map.setView([latitude, longitude], 13);
     // Tekee markerin käyttäjän sijaintiin. Jos se on olemassa, siirtää sitä.
-    if (!currentmarker) {
-        currentmarker = L.marker([latitude, longitude]);
-        currentmarker.setIcon(L.icon({
+    if (!currentMarker) {
+        currentMarker = L.marker([latitude, longitude]);
+        currentMarker.setIcon(L.icon({
             iconUrl: "leaflet/images/marker-icon-red.png",
             shadowUrl: "leaflet/images/marker-shadow.png",
             iconSize: [25,41],
@@ -77,11 +76,11 @@ function setCurrentLocation(latitude, longitude) {
             shadowAnchor: [5,40],
             popupAnchor: [0,-30]
         }));
-        currentmarker.addTo(map)
+        currentMarker.addTo(map)
             .bindPopup('Olet täällä.')
             .openPopup();
     } else {
-        currentmarker.setLatLng([latitude,longitude])
+        currentMarker.setLatLng([latitude,longitude])
     }
 }
 
