@@ -68,6 +68,15 @@ function setCurrentLocation(latitude, longitude) {
     // Tekee markerin käyttäjän sijaintiin. Jos se on olemassa, siirtää sitä.
     if (!currentmarker) {
         currentmarker = L.marker([latitude, longitude]);
+        currentmarker.setIcon(L.icon({
+            iconUrl: "leaflet/images/marker-icon-red.png",
+            shadowUrl: "leaflet/images/marker-shadow.png",
+            iconSize: [25,41],
+            shadowSize: [41,41],
+            iconAnchor: [13,37],
+            shadowAnchor: [5,40],
+            popupAnchor: [0,-30]
+        }));
         currentmarker.addTo(map)
             .bindPopup('Olet täällä.')
             .openPopup();

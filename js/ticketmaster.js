@@ -72,6 +72,15 @@ function generateHelsinkiEventMarkers(json, locations, addresses) {
                 marker.addEvent(event);
             }
         });
+        marker.setIcon(L.icon({
+            iconUrl: "leaflet/images/marker-icon-purple.png",
+            shadowUrl: "leaflet/images/marker-shadow.png",
+            iconSize: [25,41],
+            shadowSize: [41,41],
+            iconAnchor: [13,37],
+            shadowAnchor: [8,40],
+            popupAnchor: [0,-30]
+        }));
         // Napataan markeriin lämpötilat
         marker.fetchTemperature();
         // Lisätään se karttaan
