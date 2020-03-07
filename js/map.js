@@ -244,6 +244,7 @@ function makeRoute() {
         if (!currentRoute) {
             currentRoute = L.Routing.control({
                 waypoints: [currentMarker.getLatLng(), targetMarker.getLatLng()],
+                router: L.routing.mapbox('pk.eyJ1IjoicG9wcGFyaSIsImEiOiJjazdoOWN2aWwwN2cyM21wOGJhY3J5OWJzIn0.6mckBU0Hk3RrKPgWk828BQ'),
                 // Poistetaan reitin tekemät markerit
                 createMarker: function (i,waypoint,n) {
                     return null;
