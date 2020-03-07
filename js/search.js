@@ -33,6 +33,8 @@ function search() {
 }
 
 function reverse_geocode(latitude,longitude) {
+    // Mikäli koordinaatit eivät kelpaa, älä tee mitään
+    if (!validateCoordinates(latitude, longitude)) { return }
     fetch(`https://api.opencagedata.com/geocode/v1/json?q=${latitude}+${longitude}&key=3ecffaff42c04bc49347e53ca16d1b94`)
         .then(response => {return response.json()})
         .then(json => {
@@ -63,6 +65,8 @@ function setStatusMessage(status) {
 }
 
 function setCurrentLocation(latitude, longitude) {
+    // Mikäli koordinaatit eivät kelpaa, älä tee mitään
+    if (!validateCoordinates(latitude, longitude)) { return }
     map.setView([latitude, longitude], 13);
     // Tekee markerin käyttäjän sijaintiin. Jos se on olemassa, siirtää sitä.
     if (!currentMarker) {
