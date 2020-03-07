@@ -80,7 +80,11 @@ function setCurrentLocation(latitude, longitude) {
             .bindPopup('Olet täällä.')
             .openPopup();
     } else {
-        currentMarker.setLatLng([latitude,longitude])
+        currentMarker.setLatLng([latitude,longitude]);
+        // Mikäli on olemassa reitti, siirretään sen alku uuteen markeriin
+        if (currentRoute) {
+            currentRoute.setWaypoints([currentMarker.getLatLng(), targetMarker.getLatLng()]);
+        }
     }
 }
 

@@ -29,7 +29,7 @@ map.addEventListener("popupopen", popup => {
 // Karttaa klikkaaminen asettaa markerin
 map.addEventListener("dblclick", evt => {
     setCurrentLocation(evt.latlng.lat, evt.latlng.lng);
-    reverse_geocode(evt.latlng.lat, evt.latlng.lng)
+    reverse_geocode(evt.latlng.lat, evt.latlng.lng);
 });
 
 // Kaikkien markerien popupien kokoa muutetaan, kun selaimen ikkunan koko muuttuu.
