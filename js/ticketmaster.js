@@ -49,7 +49,6 @@ function generateHelsinkiEventMarkers(json, locations, addresses) {
     let events = [];
     // Muutetaan API:sta tulleet JSON-muotoiset eventit Event-luokan olioiksi
     json.data.forEach((event, i) => {
-        console.log(event);
         let evt = new MapsterEvent({
             id: event.id,
             name: event.name.fi,
@@ -76,14 +75,11 @@ function generateHelsinkiEventMarkers(json, locations, addresses) {
     });
     // Luodaan markerit sijaintien perusteella
     // TODO Markerit luodaan onnistuneesti, mutta tapahtumat eivät löydy niistä. Jokin on siis pielessä.
-    console.log(events);
     locations.forEach(location => {
         //console.log(`Tehdään marker sijaintiin ${location}`);
         let marker = new MapsterMarker(location, 13);
         events.forEach(event => {
             if (event.location.lat === location.lat && event.location.lng === location.lng) {
-                console.log(`Lisätään event sijaintiin ${location}:`);
-                console.log(event);
                 marker.addEvent(event);
             }
         });
@@ -107,7 +103,6 @@ function generateHelsinkiEventMarkers(json, locations, addresses) {
 
 // Luo Leaflet-karttaan markerit Ticketmasterin API:sta tulleen vastauksen perusteella
 function generateTicketmasterMarkers(response) {
-    console.log(response);
     let events = [];
     let locations = [];
     let foundevents = response._embedded.events;
