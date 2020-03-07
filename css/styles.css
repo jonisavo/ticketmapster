@@ -30,6 +30,11 @@ header, footer {
 header {
     line-height: 5vh;
 }
+header img {
+    align-self: center;
+    max-width: 45%;
+    max-height: 110%
+}
 
 header ul {
     margin: 0;
@@ -119,6 +124,10 @@ table {
 
     header {
         max-height: 15vh;
+    }
+    header img {
+        max-width: 55%;
+        max-height: 90%
     }
     footer {
         max-height: 15vh;

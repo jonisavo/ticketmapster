@@ -68,8 +68,8 @@ function setCurrentLocation(latitude, longitude) {
     if (!currentMarker) {
         currentMarker = L.marker([latitude, longitude]);
         currentMarker.setIcon(L.icon({
-            iconUrl: "leaflet/images/marker-icon-red.png",
-            shadowUrl: "leaflet/images/marker-shadow.png",
+            iconUrl: "img/marker-icon-red.png",
+            shadowUrl: "img/marker-shadow.png",
             iconSize: [25,41],
             shadowSize: [41,41],
             iconAnchor: [13,37],
