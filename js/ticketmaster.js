@@ -74,7 +74,7 @@ function generateHelsinkiEventMarkers(json, locations, addresses) {
         events.push(evt);
     });
     // Luodaan markerit sijaintien perusteella
-    // TODO Markerit luodaan onnistuneesti, mutta tapahtumat eivät löydy niistä. Jokin on siis pielessä.
+    console.log(locations);
     locations.forEach(location => {
         //console.log(`Tehdään marker sijaintiin ${location}`);
         let marker = new MapsterMarker(location, 13);
