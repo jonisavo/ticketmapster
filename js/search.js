@@ -52,7 +52,7 @@ function getSearchStatus(response) {
         if (response.results.length > 0) {
             return `Sijainti: ${response.results[0].formatted}`
         } else {
-            return "Ei hakutuloksia."
+            return "Osoitetta ei löydetty."
         }
     } else {
         return `Virhekoodi ${response.status.code}: ${response.status.message}`
