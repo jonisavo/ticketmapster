@@ -166,7 +166,7 @@ const MapsterMarker = L.Marker.extend({
         this.details = content;
         let popup = L.popup({
             minWidth: map.getSize().x * 0.35,
-            maxWidth: map.getSize().x * 0.55,
+            maxWidth: map.getSize().x * 0.4,
             maxHeight: map.getSize().y * 0.6
         });
         popup.setContent(`
@@ -198,10 +198,12 @@ const MapsterMarker = L.Marker.extend({
         for (let i = 0; i < this.weather.length; i++) {
             content += `
                     <li>
-                        <h4>${this.weather[i].time}</h4>   
-                        <img class="weatherIcon" src="http://openweathermap.org/img/wn/${this.weather[i].weatherIcon}.png">
-                        <p id="maxTemp">${this.weather[i].maxTemp}°C</p>
-                        <p id="minTemp">${this.weather[i].minTemp}°C</p>
+                        <h4>${this.weather[i].time}</h4>                           
+                        <img class="weatherIcon" src="http://openweathermap.org/img/wn/${this.weather[i].weatherIcon}.png">     
+                        <div id="tempInfo">                    
+                                <p id="maxTemp">${this.weather[i].maxTemp}°C</p>
+                                <p id="minTemp">${this.weather[i].minTemp}°C</p>                                                        
+                        </div>
                     </li>            
             `;
         }
@@ -218,7 +220,7 @@ const MapsterMarker = L.Marker.extend({
     resizePopup: function () {
         let popup = this.getPopup();
         popup.options.minWidth = map.getSize().x * 0.35;
-        popup.options.maxWidth = map.getSize().x * 0.55;
+        popup.options.maxWidth = map.getSize().x * 0.4;
         popup.options.maxHeight = map.getSize().y * 0.6;
         popup.update();
     }

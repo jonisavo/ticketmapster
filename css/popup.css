@@ -31,6 +31,7 @@
     display: flex;
     margin: 0;
     padding: 0;
+    height: 15%;
 }
 
 #popup-weather li {
@@ -41,26 +42,36 @@
     border: 1px solid #000;
     margin: 0.2em;
     background-color: #d4ebf2;
+    display: flex;
+    flex-wrap: wrap;
 }
 
 #popup-weather p{
-    padding: 0 0.5rem;
+    padding: 0;
 }
 
 #maxTemp{
     color: #222222;
-    display: flex;
+    text-align: center;
+    margin: 15% 0 0 0;
 }
 #minTemp{
     color: #777777;
-    display: flex;
+    text-align: center;
+    margin: 0 0 15% 0;
 }
 
 h4{
     margin: 8px 0 0 0;
+    width: 100%;
 }
 
 .weatherIcon{
-    width: 40px;
-    height: 40px;
+    width: 50%;
+    height: 50%;
+}
+
+#tempInfo{
+    width: 50%;
+    margin: 0;
 }
