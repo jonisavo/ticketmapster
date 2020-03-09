@@ -199,7 +199,7 @@ const MapsterMarker = L.Marker.extend({
             content += `
                     <li>
                         <h4>${this.weather[i].time}</h4>   
-                        <img src="http://openweathermap.org/img/wn/${this.weather[i].weatherIcon}.png">
+                        <img class="weatherIcon" src="http://openweathermap.org/img/wn/${this.weather[i].weatherIcon}.png">
                         <p id="maxTemp">${this.weather[i].maxTemp}°C</p>
                         <p id="minTemp">${this.weather[i].minTemp}°C</p>
                     </li>            
