@@ -46,7 +46,6 @@ function getHelsinkiEventLocations(events) {
 
 // Luo Leaflet-karttaan markerit Helsingin API:sta tulleen vastauksen perusteella
 function generateHelsinkiEventMarkers(json, locations, addresses) {
-    console.log(json);
     let events = [];
     // Muutetaan API:sta tulleet JSON-muotoiset eventit Event-luokan olioiksi
     json.data.forEach((event, i) => {
