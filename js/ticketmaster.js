@@ -1,5 +1,6 @@
 'use strict';
 
+// Hakee Ticketmasterin API:sta 100 tapahtumaa Suomesta
 fetch('https://app.ticketmaster.com/discovery/v2/events.json?size=100&countryCode=FI&apikey=lFzFD4km6ABGdh9aye7qdAbL5yA1AHkb')
     .then(response => {
         return response.json();
@@ -9,6 +10,7 @@ fetch('https://app.ticketmaster.com/discovery/v2/events.json?size=100&countryCod
         console.log(error);
     });
 
+// Hakee Helsingin API:sta 20 tapahtumaa
 fetch('https://api.hel.fi/linkedevents/v1/event/')
     .then(response => {
         return response.json();
@@ -63,6 +65,7 @@ function generateHelsinkiEventMarkers(json, locations, addresses) {
             url: null,
             origin: "helsinki"
         });
+        // Tarkistetaan löytyykö tapahtumalle kuvaa, url:ää ja kuvausta
         if (event.images != null && event.images.length !== 0) {
             evt.image = event.images[0].url;
         }
