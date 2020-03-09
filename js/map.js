@@ -113,7 +113,6 @@ const MapsterMarker = L.Marker.extend({
 
                     // Tehdään viikonpäiville lista jotta saadaan getDay funktiolla oikea päivä.
                     let weekDays = ['SU', 'MA', 'TI', 'KE', 'TO', 'PE', 'LA'];
-                    let weekDay = weekDays[date.getDay()];
 
                     // Työnnetään säätiedot listaan
                     this.weather.push(new MapsterWeather({
@@ -122,9 +121,11 @@ const MapsterMarker = L.Marker.extend({
                         // Maksimilämpötila
                         maxTemp: (maxTemp - 273.15).toFixed(1),
                         // Päivämäärä
-                        time: weekDay + ' ' + date.getDate() + '.' + (date.getMonth() + 1),
+                        time: date.getDate() + '.' + (date.getMonth() + 1),
                         // Säätyypin kuva
-                        weatherIcon: json.list[day].weather[0].icon
+                        weatherIcon: json.list[day].weather[0].icon,
+                        // Viikonpäivä
+                        weekDay: weekDays[date.getDay()]
                     }));
 
                     //Päivitetään popup.
@@ -197,6 +198,7 @@ const MapsterMarker = L.Marker.extend({
         for (let i = 0; i < this.weather.length; i++) {
             content += `
                     <li>
+                        <h4 id="weekday">${this.weather[i].weekDay}</h4>
                         <h4>${this.weather[i].time}</h4>                           
                         <img class="weatherIcon" src="http://openweathermap.org/img/wn/${this.weather[i].weatherIcon}.png">     
                         <div id="tempInfo">                    
@@ -225,8 +227,8 @@ const MapsterMarker = L.Marker.extend({
             popup.options.maxHeight = map.getSize().y * 0.6;
         }
         else {
-            popup.options.minWidth = map.getSize().x * 0.5;
-            popup.options.maxWidth = map.getSize().x * 0.6;
+            popup.options.minWidth = map.getSize().x * 0.6;
+            popup.options.maxWidth = map.getSize().x * 0.7;
             popup.options.maxHeight = map.getSize().y * 0.7;
         }
         popup.update();
@@ -305,5 +307,6 @@ class MapsterWeather {
         this.maxTemp = props.maxTemp;
         this.time = props.time;
         this.weatherIcon = props.weatherIcon;
+        this.weekDay = props.weekDay
     }
 }
