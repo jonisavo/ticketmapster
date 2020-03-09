@@ -87,7 +87,6 @@ const MapsterMarker = L.Marker.extend({
                 // Haetaan API:sta säätietoja sekä ajat. Lisätään weather-listaan.
                 for (let i = 0; i < 5; i++) {
                     let day = i * 8;
-                    console.log(day);
 
                     // Katsotaan päivien lämpötiloista isoimmat ja pienimmät.
                     let maxTemp = Math.max(
@@ -155,6 +154,11 @@ const MapsterMarker = L.Marker.extend({
                 if (event.url) {
                     content += `<a href="${event.url}" target="_blank">Hanki liput</a>`;
                 }
+                if (event.fromTicketmaster()) {
+                    content += `<p><br/>Tapahtuma on Ticketmasterin tietokannasta.</p>`
+                } else if (event.fromHelsinki()) {
+                    content += `<p><br/>Tapahtuma on Helsingin tietokannasta.</p>`
+                }
                 content += `</details>`;
             }});
         this.details = content;
@@ -162,6 +166,7 @@ const MapsterMarker = L.Marker.extend({
         popup.setContent(`
             <div id="popup-container">
                 <div id="popup-events">${this.details}</div>
+                <div id="popup-routing"><button onclick="makeRoute()">Reitti tänne</button></div>
                 <div id="popup-weather"><p>Lämpötilaa ladataan...</p></div>
             </div>`);
         popup.update();
@@ -182,7 +187,7 @@ const MapsterMarker = L.Marker.extend({
         let content = `
         <div id="popup-container">
             <div id="popup-events">${this.details}</div>
-            <div id="popup-routing"><button href="#" onclick="makeRoute()">Reitti tänne</button></div>
+            <div id="popup-routing"><button onclick="makeRoute()">Reitti tänne</button></div>
             <div id="popup-weather">
                 <ul>`;
         // Piirretään sää

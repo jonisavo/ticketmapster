@@ -12,7 +12,8 @@ section {
     width: 280px;
     max-height: 70vh;
     border-radius: 10px;
-    background-color: dodgerblue;
+    background: rgb(30,144,255);
+    background: linear-gradient(90deg, rgba(30,144,255,1) 57%, rgba(122,198,222,1) 100%);
     color: white;
     padding: 10px;
     margin: 10px 0;
