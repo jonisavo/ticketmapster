@@ -11,15 +11,6 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     noWrap: true
 }).addTo(map);
 
-class MapsterWeather {
-    constructor(props) {
-        this.minTemp = props.minTemp;
-        this.maxTemp = props.maxTemp;
-        this.time = props.time;
-        this.weatherIcon = props.weatherIcon;
-    }
-}
-
 // Siirretään karttaa aina popupia avattaessa
 map.addEventListener("popupopen", popup => {
     let pan_location = map.project(popup.target._popup._latlng);
@@ -44,6 +35,7 @@ window.addEventListener('resize', evt => {
     marker_resize_timeout = setTimeout(resizeAllMarkers(),100)
 });
 
+// Päivitetään kaikkien markerien koko.
 function resizeAllMarkers() {
     map.eachLayer(layer => {
         if (layer instanceof MapsterMarker) {
@@ -52,21 +44,17 @@ function resizeAllMarkers() {
     })
 }
 
+// Tarkastaa, ovatko annettu leveys- ja pituuspiiri kelvollisia.
 function validateCoordinates(latitude, longitude) {
     return (latitude >= -90 && latitude <= 90 && longitude >= -180 && longitude <= 180)
 }
 
-// MapsterMarker on L.Markerin alaluokka, joka sisältää tapahtuma-olioita.
+// MapsterMarker on L.Markerin alaluokka, joka sisältää tapahtuma-olioita ja
+// markerin koordinaateissa sijaitsevan sääennusteen.
 const MapsterMarker = L.Marker.extend({
 
     //Weather-lista viidelle päivälle.
-    weather: [
-        new MapsterWeather({minTemp: null, maxTemp: null, time: null, weatherIcon: null}),
-        new MapsterWeather({minTemp: null, maxTemp: null, time: null, weatherIcon: null}),
-        new MapsterWeather({minTemp: null, maxTemp: null, time: null, weatherIcon: null}),
-        new MapsterWeather({minTemp: null, maxTemp: null, time: null, weatherIcon: null}),
-        new MapsterWeather({minTemp: null, maxTemp: null, time: null, weatherIcon: null}),
-    ],
+    weather: [],
 
     events: [],
     details: null,
@@ -94,51 +82,51 @@ const MapsterMarker = L.Marker.extend({
                 return vastaus.json();
             })
             .then(json => {
-                //Haetaan API:sta säätietoja sekä ajat. Lisätään weather-listaan.
-                let maxTemp;
-                let minTemp;
-                let x = 0;
-                for (let i = 0; i < this.weather.length; i++) {
+                // Ensin tyhjennetään weather-lista.
+                this.weather = [];
+                // Haetaan API:sta säätietoja sekä ajat. Lisätään weather-listaan.
+                for (let i = 0; i < 5; i++) {
+                    let day = i * 8;
+                    console.log(day);
 
-                    //Katsotaan päivien lämpötiloista isoimmat ja pienimmät.
-                    maxTemp = Math.max(
-                        json.list[x].main.temp_max,
-                        json.list[1+x].main.temp_max,
-                        json.list[2+x].main.temp_max,
-                        json.list[3+x].main.temp_max,
-                        json.list[4+x].main.temp_max,
-                        json.list[5+x].main.temp_max,
-                        json.list[6+x].main.temp_max,
-                        json.list[7+x].main.temp_max,);
+                    // Katsotaan päivien lämpötiloista isoimmat ja pienimmät.
+                    let maxTemp = Math.max(
+                        json.list[day].main.temp_max,
+                        json.list[1+day].main.temp_max,
+                        json.list[2+day].main.temp_max,
+                        json.list[3+day].main.temp_max,
+                        json.list[4+day].main.temp_max,
+                        json.list[5+day].main.temp_max,
+                        json.list[6+day].main.temp_max,
+                        json.list[7+day].main.temp_max,);
 
-                    minTemp = Math.min(
-                        json.list[x].main.temp_min,
-                        json.list[1+x].main.temp_min,
-                        json.list[2+x].main.temp_min,
-                        json.list[3+x].main.temp_min,
-                        json.list[4+x].main.temp_min,
-                        json.list[5+x].main.temp_min,
-                        json.list[6+x].main.temp_min,
-                        json.list[7+x].main.temp_min,);
+                    let minTemp = Math.min(
+                        json.list[day].main.temp_min,
+                        json.list[1+day].main.temp_min,
+                        json.list[2+day].main.temp_min,
+                        json.list[3+day].main.temp_min,
+                        json.list[4+day].main.temp_min,
+                        json.list[5+day].main.temp_min,
+                        json.list[6+day].main.temp_min,
+                        json.list[7+day].main.temp_min,);
 
-                    //Sijoitetaan listaan minimi ja maximi lämpötilat.
-                    //API:sta tulevat lämpötilat ovat kelvineinä joten muutetaan myös celciuksiksi.
-                    this.weather[i].minTemp = (minTemp - 273.15).toFixed(1);
-                    this.weather[i].maxTemp = (maxTemp - 273.15).toFixed(1);
+                    // Otetaan unix-ajasta päivämäärä.
+                    let date = new Date(json.list[day].dt * 1000);
 
-                    //Otetaan unix-ajasta päivämäärä.
-                    let unixTimeStamp = json.list[x].dt;
-                    const date = new Date(unixTimeStamp * 1000);
-                    const month = date.getMonth() + 1;
-                    const day = date.getDate();
-                    this.weather[i].time = day + '.' + month;
-
-                    //Haetaan API:sta säätyypin kuva.
-                    this.weather[i].weatherIcon = json.list[x].weather[0].icon;
+                    // Työnnetään säätiedot listaan
+                    this.weather.push(new MapsterWeather({
+                        // Minimilämpötila
+                        minTemp: (minTemp - 273.15).toFixed(1),
+                        // Maksimilämpötila
+                        maxTemp: (maxTemp - 273.15).toFixed(1),
+                        // Päivämäärä
+                        time: date.getDate() + '.' + (date.getMonth() + 1),
+                        // Säätyypin kuva
+                        weatherIcon: json.list[day].weather[0].icon
+                    }));
 
                     //Päivitetään popup.
                     this.updatePopup();
-                    x += 8;
                 }
             })
             .catch(error => {
@@ -300,5 +288,14 @@ function makeRoute() {
         targetMarker.closePopup();
     } else {
         alert("Sinulla ei ole sijaintia. Tuplaklikkaa karttaa tai kirjoita sijainti hakukenttään.");
+    }
+}
+
+class MapsterWeather {
+    constructor(props) {
+        this.minTemp = props.minTemp;
+        this.maxTemp = props.maxTemp;
+        this.time = props.time;
+        this.weatherIcon = props.weatherIcon;
     }
 }
