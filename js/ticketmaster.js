@@ -58,7 +58,7 @@ function generateHelsinkiEventMarkers(json, locations, addresses) {
             genre: null,
             subGenre: null,
             description: null,
-            startDate: event.start_time,
+            startDate: event.start_time.split('T')[0],
             address: addresses[i],
             url: null
         });

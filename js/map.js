@@ -191,7 +191,7 @@ const MapsterMarker = L.Marker.extend({
         let content = `
         <div id="popup-container">
             <div id="popup-events">${this.details}</div>
-            <div id="popup-routing"><a href="#" onclick="makeRoute()">Reitti tänne</a></div>
+            <div id="popup-routing"><button href="#" onclick="makeRoute()">Reitti tänne</button></div>
             <div id="popup-weather">
                 <ul>`;
         // Piirretään sää
