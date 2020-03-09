@@ -4,6 +4,8 @@
     max-height: 100%;
 }
 
+#popup-routing {padding: 0.2rem 0 0 0; margin: auto;}
+
 .popup-information {
     margin-bottom: 0.25rem;
     padding: 0.5rem;
@@ -13,7 +15,7 @@
 #popup-events {
     width: 100%;
     overflow: scroll;
-    max-height: 200px;
+    max-height: 170px;
 }
 
 #popup-weather {
@@ -23,10 +25,13 @@
 
 .popup-information p, .popup-information a {margin: 0; padding: 0;}
 
+.popup-information img {margin-top: 0.5rem;}
+
 #popup-weather ul {
     display: flex;
     margin: 0;
     padding: 0;
+    height: 15%;
 }
 
 #popup-weather li {
@@ -37,24 +42,56 @@
     border: 1px solid #000;
     margin: 0.2em;
     background-color: #d4ebf2;
+    display: flex;
+    flex-wrap: wrap;
 }
+
 #popup-weather p{
-    padding: 0 0.5rem;
-    text-align: center;
+    padding: 0;
 }
 
 #maxTemp{
     color: #222222;
+    align-content: center;
+    margin: 15% 0 0 0;
 }
 #minTemp{
     color: #777777;
+    align-content: center;
+    margin: 0 0 15% 0;
 }
 
 h4{
     margin: 8px 0 0 0;
+    width: 100%;
 }
 
-img{
-    width: 40px;
-    height: 40px;
+.weatherIcon{
+    width: 50%;
+    height: 50%;
+}
+
+#tempInfo{
+    width: 50%;
+    margin: 0;
+}
+
+@media (max-width: 1000px){
+    #popup-weather li{
+        display: inline;
+    }
+    #tempInfo{
+        margin-left: auto;
+        margin-right: auto;
+        width: 100%;
+    }
+    #popup-events {
+        max-height: 120px;
+    }
+    #minTemp {
+        margin: 0;
+    }
+    #maxTemp{
+        margin: 0;
+    }
 }

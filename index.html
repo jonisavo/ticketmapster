@@ -4,57 +4,43 @@
     <meta charset="UTF-8">
     <title>Ticketmapster</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
     <link rel="stylesheet" href="css/styles.css" />
-    <link rel="stylesheet" href="./leaflet/leaflet.css" />
     <link rel="stylesheet" href="css/popup.css" />
-    <link rel="stylesheet" href="leaflet-routing-machine-3.2.12/dist/leaflet-routing-machine.css" />
     <link href="https://fonts.googleapis.com/css?family=Muli|Ovo&display=swap&subset=latin-ext" rel="stylesheet">
-    <script src="./leaflet/leaflet.js"></script>
-    <script src="leaflet-routing-machine-3.2.12/dist/leaflet-routing-machine.js"></script>
+    <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
 </head>
 <body>
 <div id="page-container">
     <header>
         <img src="img/ticketmapster.png" alt="Ticketmapster">
         <ul>
-            <li><p><a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">Video</a></p></li>
-            <li><p><a href="tekijat/index.html">Tekijät</a></p></li>
+            <li><p><strong><a href="video/index.html">Video</a></strong></p></li>
+            <li><p><strong><a href="tekijat/index.html">Tekijät</a></strong></p></li>
         </ul>
     </header>
     <div id="settings">
-        <label for="search_input">
-            <div id="input_area">
+        <div id="input_area">
+            <label for="search_input">
                 <input type="text" id="search_input" placeholder="Anna sijaintisi tai tuplaklikkaa karttaa">
-                <button type="submit" id="submit_button">Etsi</button>
+                <button type="submit" id="submit_button">Siirry</button>
                 <button type="button" id="locate_button">Paikanna minut</button>
-            </div>
-        </label>
-        <p id="search_results"></p>
-        <table>
-            <tr>
-                <td>Hakuehto</td>
-                <td>Hakuehto</td>
-                <td>Hakuehto</td>
-            </tr>
-        </table>
+            </label>
+        </div>
+        <div id="result_area">
+            <p id="search_results"></p>
+        </div>
     </div>
     <div id="map"></div>
     <footer>
         <p>Ryhmä8</p>
-        <p>
-            <a href="https://leafletjs.com/" target="_blank">Leaflet</a>,
-            <a href="https://www.openstreetmap.org/" target="_blank">OpenStreetMap</a>,
-            <a href="https://developer.ticketmaster.com/products-and-docs/apis/discovery-api/v2/" target="_blank">Ticketmaster API</a>,
-            <a href="https://opencagedata.com/" target="_blank">OpenCageData Geocoding API</a>,
-            <a href="https://www.liedman.net/leaflet-routing-machine/" target="_blank">Leaflet Routing Machine</a>,
-            <a href="https://docs.mapbox.com/help/glossary/directions-api/" target="_blank">Mapbox Directions API</a>
-        </p>
     </footer>
 </div>
 
 <script src="js/map.js"></script>
 <script src="js/search.js"></script>
-<script src="js/weather.js"></script>
 <script src="js/ticketmaster.js"></script>
 </body>
 </html>
