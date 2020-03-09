@@ -205,8 +205,8 @@ const MapsterMarker = L.Marker.extend({
                         <h4>${this.weather[i].time}</h4>                           
                         <img class="weatherIcon" src="http://openweathermap.org/img/wn/${this.weather[i].weatherIcon}.png">     
                         <div id="tempInfo">                    
-                                <p id="maxTemp">${this.weather[i].maxTemp}°C</p>
-                                <p id="minTemp">${this.weather[i].minTemp}°C</p>                                                        
+                                <p id="maxTemp">${this.weather[i].maxTemp}°</p>
+                                <p id="minTemp">${this.weather[i].minTemp}°</p>                                                        
                         </div>
                     </li>            
             `;
@@ -223,9 +223,17 @@ const MapsterMarker = L.Marker.extend({
 
     resizePopup: function () {
         let popup = this.getPopup();
-        popup.options.minWidth = map.getSize().x * 0.35;
-        popup.options.maxWidth = map.getSize().x * 0.4;
-        popup.options.maxHeight = map.getSize().y * 0.6;
+
+        if (map.getSize().x > 700) {
+            popup.options.minWidth = map.getSize().x * 0.35;
+            popup.options.maxWidth = map.getSize().x * 0.4;
+            popup.options.maxHeight = map.getSize().y * 0.6;
+        }
+        else {
+            popup.options.minWidth = map.getSize().x * 0.5;
+            popup.options.maxWidth = map.getSize().x * 0.6;
+            popup.options.maxHeight = map.getSize().y * 0.7;
+        }
         popup.update();
     }
 
