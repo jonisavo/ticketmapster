@@ -11,14 +11,6 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     noWrap: true
 }).addTo(map);
 
-class MapsterWeather {
-    constructor(props) {
-        this.minTemp = props.minTemp;
-        this.maxTemp = props.maxTemp;
-        this.time = props.time;
-    }
-}
-
 // Siirretään karttaa aina popupia avattaessa
 map.addEventListener("popupopen", popup => {
     let pan_location = map.project(popup.target._popup._latlng);
@@ -63,7 +55,6 @@ const MapsterMarker = L.Marker.extend({
 
     //Weather-lista viidelle päivälle.
     weather: [],
-
     events: [],
     details: null,
 
@@ -120,6 +111,10 @@ const MapsterMarker = L.Marker.extend({
                     // Otetaan unix-ajasta päivämäärä.
                     let date = new Date(json.list[day].dt * 1000);
 
+                    // Tehdään viikonpäiville lista jotta saadaan getDay funktiolla oikea päivä.
+                    let weekDays = ['SU', 'MA', 'TI', 'KE', 'TO', 'PE', 'LA'];
+                    let weekDay = weekDays[date.getDay()];
+
                     // Työnnetään säätiedot listaan
                     this.weather.push(new MapsterWeather({
                         // Minimilämpötila
@@ -127,7 +122,7 @@ const MapsterMarker = L.Marker.extend({
                         // Maksimilämpötila
                         maxTemp: (maxTemp - 273.15).toFixed(1),
                         // Päivämäärä
-                        time: date.getDate() + '.' + (date.getMonth() + 1),
+                        time: weekDay + ' ' + date.getDate() + '.' + (date.getMonth() + 1),
                         // Säätyypin kuva
                         weatherIcon: json.list[day].weather[0].icon
                     }));
