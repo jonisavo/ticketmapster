@@ -56,53 +56,50 @@ footer p {
 header a, footer a {
     color: white;
 }
+#ext_credits {
+    text-align: right;
+}
 
 table {
     padding-top: 5vh;
 }
 
 #settings {
-    display: flex;
-    flex-wrap: wrap;
-    flex-direction: column;
-    width: 35%;
-    height: 80vh;
-    padding-left: 5vh;
+    width: 100%;
+    max-height: 10vh;
+    padding-left: 2.5vw;
     padding-top: 2vh;
     box-sizing: border-box;
 }
 
-#settings label {
-    width: 100%;
-    height: auto;
-}
-#settings #search_results {
-    margin: 0;
-    width: 100%;
-    height: auto;
-}
-#settings table {
-    width: 100%;
-}
-
 #input_area {
+    display: flex;
     flex-direction: row;
     align-items: center;
+    width: 100%;
 }
-
 #search_input {
     height: 3vh;
-    min-width: 20vw;
+    min-width: 25vw;
+    max-width: 65vw;
 }
-
 #submit_button, #locate_button {
     margin-left: 0.5vw;
     height: 2.5em;
 }
+#result_area {
+    margin: 0;
+    width: 100%;
+    height: auto;
+}
+#search_results {
+    margin: 0;
+}
+
 
 #map {
-    width: 60%;
-    height: 75vh;
+    width: 95%;
+    height: 65vh;
     margin: auto;
     box-sizing: border-box;
     border-style: solid;
@@ -130,16 +127,25 @@ table {
     }
     footer {
         max-height: 15vh;
+        font-size: small;
+    }
+    #ext_credits {
+        width: 70%;
+        margin-bottom: 0;
+        margin-right: 0;
     }
 
     #settings {
         width: 100%;
-        height: 30vh;
+        height: 15vh;
     }
-
     #map {
         width: 100%;
-        height: 45vh;
+        height: 55vh;
+    }
+    #search_results {
+        margin-top: 0.75vh;
+        font-size: small;
     }
 }
 

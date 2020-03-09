@@ -22,30 +22,25 @@
         </ul>
     </header>
     <div id="settings">
-        <label for="search_input">
-            <div id="input_area">
+        <div id="input_area">
+            <label for="search_input">
                 <input type="text" id="search_input" placeholder="Anna sijaintisi tai tuplaklikkaa karttaa">
                 <button type="submit" id="submit_button">Siirry</button>
                 <button type="button" id="locate_button">Paikanna minut</button>
-            </div>
-        </label>
-        <p id="search_results"></p>
-        <table>
-            <tr>
-                <td>Hakuehto</td>
-                <td>Hakuehto</td>
-                <td>Hakuehto</td>
-            </tr>
-        </table>
+            </label>
+        </div>
+        <div id="result_area">
+            <p id="search_results"></p>
+        </div>
     </div>
     <div id="map"></div>
     <footer>
         <p>Ryhmä8</p>
-        <p>
+        <p id="ext_credits">
             <a href="https://leafletjs.com/" target="_blank">Leaflet</a>,
             <a href="https://www.openstreetmap.org/" target="_blank">OpenStreetMap</a>,
             <a href="https://developer.ticketmaster.com/products-and-docs/apis/discovery-api/v2/" target="_blank">Ticketmaster API</a>,
-            <a href="http://open-api.myhelsinki.fi/" target="_blank">MyHelsinki Open API</a>,
+            <a href="http://dev.hel.fi/apis/linked-events/" target="_blank">Helsinki Linked Events API</a>,
             <a href="https://opencagedata.com/" target="_blank">OpenCageData Geocoding API</a>,
             <a href="https://www.liedman.net/leaflet-routing-machine/" target="_blank">Leaflet Routing Machine</a>,
             <a href="https://docs.mapbox.com/help/glossary/directions-api/" target="_blank">Mapbox Directions API</a>,
