@@ -52,12 +52,12 @@
 
 #maxTemp{
     color: #222222;
-    text-align: center;
+    align-content: center;
     margin: 15% 0 0 0;
 }
 #minTemp{
     color: #777777;
-    text-align: center;
+    align-content: center;
     margin: 0 0 15% 0;
 }
 
@@ -83,8 +83,15 @@ h4{
     #tempInfo{
         margin-left: auto;
         margin-right: auto;
+        width: 100%;
     }
     #popup-events {
         max-height: 120px;
+    }
+    #minTemp {
+        margin: 0;
+    }
+    #maxTemp{
+        margin: 0;
     }
 }
