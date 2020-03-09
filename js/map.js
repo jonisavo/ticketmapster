@@ -152,23 +152,26 @@ const MapsterMarker = L.Marker.extend({
         let content = "";
         this.events.forEach(event => {
             if (event.location.lat === this.getLatLng().lat && event.location.lng === this.getLatLng().lng) {
-                content += `
-                <details class="popup-information">
-                    <summary>${event.name}</summary>
-                    <img src="${event.image}" width="100%" alt="Tapahtuman kuva">
-                    <h3>${event.name}</h3>
-                    <p>${event.classification}: ${event.genre}, ${event.subGenre}</p>
-                    <p>${event.startDate}</p>
-                    <p>${event.address}</p>
-                    <a href="${event.url}" target="_blank">Hanki liput</a>
-                </details>`
+                content += `<details class="popup-information">`;
+                content += `<summary>${(event.name) ? event.name : "(Ei nimeä)"}</summary>`;
+                if (event.image) {
+                    content += `<img src="${event.image}" width="100%" alt="Tapahtuman kuva">`
+                }
+                content += `<h3>${(event.name) ? event.name : "(Ei nimeä)"}</h3>`
+                if (event.fromTicketmaster()) {
+                    content += `<p>${event.classification}: ${event.genre}, ${event.subGenre}</p>`
+                } else if (event.fromHelsinki() && event.description) {
+                    content += `<p>${event.description}</p>`
+                }
+                content += `<p>${event.startDate}</p>`;
+                content += `<p>${event.address}</p>`;
+                if (event.url) {
+                    content += `<a href="${event.url}" target="_blank">Hanki liput</a>`;
+                }
+                content += `</details>`;
             }});
         this.details = content;
-        let popup = L.popup({
-            minWidth: map.getSize().x * 0.35,
-            maxWidth: map.getSize().x * 0.4,
-            maxHeight: map.getSize().y * 0.6
-        });
+        let popup = L.popup();
         popup.setContent(`
             <div id="popup-container">
                 <div id="popup-events">${this.details}</div>
@@ -176,6 +179,7 @@ const MapsterMarker = L.Marker.extend({
             </div>`);
         popup.update();
         this.bindPopup(popup);
+        this.resizePopup();
 
         this.addEventListener('click', evt => {
             targetMarker = evt.target;
@@ -240,6 +244,15 @@ class MapsterEvent {
         this.startDate = options.startDate;
         this.address = options.address;
         this.url = options.url;
+        this.origin = options.origin;
+    }
+
+    fromTicketmaster() {
+        return this.origin === "ticketmaster";
+    }
+
+    fromHelsinki() {
+        return this.origin === "helsinki";
     }
 }
 
@@ -278,6 +291,6 @@ function makeRoute() {
         }
         targetMarker.closePopup();
     } else {
-        alert("Sinulla ei ole sijaintia voi ei")
+        alert("Sinulla ei ole sijaintia. Tuplaklikkaa karttaa tai kirjoita sijainti hakukenttään.")
     }
 }

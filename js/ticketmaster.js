@@ -60,7 +60,8 @@ function generateHelsinkiEventMarkers(json, locations, addresses) {
             description: null,
             startDate: event.start_time.split('T')[0],
             address: addresses[i],
-            url: null
+            url: null,
+            origin: "helsinki"
         });
         if (event.images != null && event.images.length !== 0) {
             evt.image = event.images[0].url;
@@ -118,7 +119,8 @@ function generateTicketmasterMarkers(response) {
             subGenre: event.classifications[0].subGenre.name,
             startDate: event.dates.start.localDate,
             address: event._embedded.venues[0].address.line1,
-            url: event.url
+            url: event.url,
+            origin: "ticketmaster"
         }));
         // Jos tapahtumalla on uniikki sijainti, pistetään se talteen.
         // latlng-objekteja ei ilmeisesti voi verrata suoraan, joten
