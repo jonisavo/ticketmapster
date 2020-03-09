@@ -8,6 +8,7 @@ let currentRoute = null;
 let map = L.map('map').setView([60.171972,24.941496], 12);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    noWrap: true
 }).addTo(map);
 
 class MapsterWeather {
@@ -30,7 +31,7 @@ map.addEventListener("popupopen", popup => {
 // Karttaa klikkaaminen asettaa markerin
 map.addEventListener("dblclick", evt => {
     setCurrentLocation(evt.latlng.lat, evt.latlng.lng);
-    reverse_geocode(evt.latlng.lat, evt.latlng.lng)
+    reverse_geocode(evt.latlng.lat, evt.latlng.lng);
 });
 
 // Kaikkien markerien popupien kokoa muutetaan, kun selaimen ikkunan koko muuttuu.
@@ -49,6 +50,10 @@ function resizeAllMarkers() {
             layer.resizePopup();
         }
     })
+}
+
+function validateCoordinates(latitude, longitude) {
+    return (latitude >= -90 && latitude <= 90 && longitude >= -180 && longitude <= 180)
 }
 
 // MapsterMarker on L.Markerin alaluokka, joka sisältää tapahtuma-olioita.
@@ -241,10 +246,28 @@ function makeRoute() {
         if (!currentRoute) {
             currentRoute = L.Routing.control({
                 waypoints: [currentMarker.getLatLng(), targetMarker.getLatLng()],
+                router: L.routing.mapbox('pk.eyJ1IjoicG9wcGFyaSIsImEiOiJjazdoOWN2aWwwN2cyM21wOGJhY3J5OWJzIn0.6mckBU0Hk3RrKPgWk828BQ'),
                 // Poistetaan reitin tekemät markerit
                 createMarker: function (i,waypoint,n) {
                     return null;
                 },
+                routeWhileDragging: false,
+                collapsible: true
+            });
+            currentRoute.addEventListener('routingerror', evt => {
+                let message;
+                if (evt.error.message === "HTTP request failed: undefined") {
+                    message = JSON.parse(evt.error.target.response).message;
+                } else {
+                    if (evt.error.status === "NoRoute") {
+                        message = "Reittiä ei löytynyt"
+                    } else {
+                        message = evt.error.message;
+                    }
+                }
+                alert(`Virhe tapahtui reitityksessä: ${message}`);
+                currentRoute.remove();
+                currentRoute = null;
             });
             currentRoute.addTo(map);
         } else {

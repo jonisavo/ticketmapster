@@ -33,6 +33,8 @@ function search() {
 }
 
 function reverse_geocode(latitude,longitude) {
+    // Mikäli koordinaatit eivät kelpaa, älä tee mitään
+    if (!validateCoordinates(latitude, longitude)) { return }
     fetch(`https://api.opencagedata.com/geocode/v1/json?q=${latitude}+${longitude}&key=3ecffaff42c04bc49347e53ca16d1b94`)
         .then(response => {return response.json()})
         .then(json => {
@@ -50,7 +52,7 @@ function getSearchStatus(response) {
         if (response.results.length > 0) {
             return `Sijainti: ${response.results[0].formatted}`
         } else {
-            return "Ei hakutuloksia."
+            return "Osoitetta ei löydetty."
         }
     } else {
         return `Virhekoodi ${response.status.code}: ${response.status.message}`
@@ -63,13 +65,15 @@ function setStatusMessage(status) {
 }
 
 function setCurrentLocation(latitude, longitude) {
+    // Mikäli koordinaatit eivät kelpaa, älä tee mitään
+    if (!validateCoordinates(latitude, longitude)) { return }
     map.setView([latitude, longitude], 13);
     // Tekee markerin käyttäjän sijaintiin. Jos se on olemassa, siirtää sitä.
     if (!currentMarker) {
         currentMarker = L.marker([latitude, longitude]);
         currentMarker.setIcon(L.icon({
-            iconUrl: "leaflet/images/marker-icon-red.png",
-            shadowUrl: "leaflet/images/marker-shadow.png",
+            iconUrl: "img/marker-icon-red.png",
+            shadowUrl: "img/marker-shadow.png",
             iconSize: [25,41],
             shadowSize: [41,41],
             iconAnchor: [13,37],
@@ -80,7 +84,11 @@ function setCurrentLocation(latitude, longitude) {
             .bindPopup('Olet täällä.')
             .openPopup();
     } else {
-        currentMarker.setLatLng([latitude,longitude])
+        currentMarker.setLatLng([latitude,longitude]);
+        // Mikäli on olemassa reitti, siirretään sen alku uuteen markeriin
+        if (currentRoute) {
+            currentRoute.setWaypoints([currentMarker.getLatLng(), targetMarker.getLatLng()]);
+        }
     }
 }
 

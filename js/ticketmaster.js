@@ -74,9 +74,8 @@ function generateHelsinkiEventMarkers(json, locations, addresses) {
         events.push(evt);
     });
     // Luodaan markerit sijaintien perusteella
-    console.log(locations);
     locations.forEach(location => {
-        console.log(`Tehdään marker sijaintiin ${location}`);
+        //console.log(`Tehdään marker sijaintiin ${location}`);
         let marker = new MapsterMarker(location, 13);
         events.forEach(event => {
             if (event.location.lat === location.lat && event.location.lng === location.lng) {
@@ -84,8 +83,8 @@ function generateHelsinkiEventMarkers(json, locations, addresses) {
             }
         });
         marker.setIcon(L.icon({
-            iconUrl: "leaflet/images/marker-icon-purple.png",
-            shadowUrl: "leaflet/images/marker-shadow.png",
+            iconUrl: "img/marker-icon-purple.png",
+            shadowUrl: "img/marker-shadow.png",
             iconSize: [25,41],
             shadowSize: [41,41],
             iconAnchor: [13,37],
@@ -103,7 +102,6 @@ function generateHelsinkiEventMarkers(json, locations, addresses) {
 
 // Luo Leaflet-karttaan markerit Ticketmasterin API:sta tulleen vastauksen perusteella
 function generateTicketmasterMarkers(response) {
-    console.log(response);
     let events = [];
     let locations = [];
     let foundevents = response._embedded.events;
