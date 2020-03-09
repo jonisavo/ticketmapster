@@ -1,8 +1,8 @@
 'use strict';
 
-let currentMarker = null;
-let targetMarker = null;
-let currentRoute = null;
+let currentMarker = null;   // Käyttäjän sijainti
+let targetMarker = null;    // Reitityksen kohde
+let currentRoute = null;    // Reitityksen reitti
 
 // Tehdään kartta
 let map = L.map('map').setView([60.171972,24.941496], 12);
@@ -147,7 +147,6 @@ const MapsterMarker = L.Marker.extend({
     },
 
     // Rakentaa markerin popupin.
-    // TODO kaikki tieto ei välttämättä löydy, ja sen vuoksi tulisi käyttää if-lauseita palautuksen tarkistamiseen
     generatePopup: function () {
         let content = "";
         this.events.forEach(event => {
@@ -264,6 +263,7 @@ class MapsterEvent {
     }
 }
 
+// Asettaa reitityksen kartalle käyttäjän antaman sijainnin ja kohteen välille
 function makeRoute() {
     if (currentMarker != null) {
         if (!currentRoute) {
@@ -299,6 +299,6 @@ function makeRoute() {
         }
         targetMarker.closePopup();
     } else {
-        alert("Sinulla ei ole sijaintia. Tuplaklikkaa karttaa tai kirjoita sijainti hakukenttään.")
+        alert("Sinulla ei ole sijaintia. Tuplaklikkaa karttaa tai kirjoita sijainti hakukenttään.");
     }
 }
