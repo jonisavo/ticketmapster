@@ -76,7 +76,7 @@ const MapsterMarker = L.Marker.extend({
     fetchTemperature: function() {
         let lat = this.getLatLng().lat;
         let lng = this.getLatLng().lng;
-        let osoite = 'http://api.openweathermap.org/data/2.5/forecast?lat=' + lat + '&lon=' + lng + '&APPID=3f9c0f263c23c5f5c69f9ace9cc53244';
+        let osoite = 'https://api.openweathermap.org/data/2.5/forecast?lat=' + lat + '&lon=' + lng + '&APPID=3f9c0f263c23c5f5c69f9ace9cc53244';
         fetch(osoite)
             .then(vastaus => {
                 return vastaus.json();
@@ -195,7 +195,7 @@ const MapsterMarker = L.Marker.extend({
             content += `
                     <li>
                         <h4>${this.weather[i].time}</h4>                           
-                        <img class="weatherIcon" src="http://openweathermap.org/img/wn/${this.weather[i].weatherIcon}.png">     
+                        <img class="weatherIcon" src="https://openweathermap.org/img/wn/${this.weather[i].weatherIcon}.png">     
                         <div id="tempInfo">                    
                                 <p id="maxTemp">${this.weather[i].maxTemp}°</p>
                                 <p id="minTemp">${this.weather[i].minTemp}°</p>                                                        
