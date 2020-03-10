@@ -159,9 +159,9 @@ const MapsterMarker = L.Marker.extend({
                     content += `<a href="${event.url}" target="_blank">Hanki liput</a>`;
                 }
                 if (event.fromTicketmaster()) {
-                    content += `<p><br/>Tapahtuma on Ticketmasterin tietokannasta.</p>`
+                    content += `<p><br/>Tiedot ovat Ticketmasterin tietokannasta.</p>`
                 } else if (event.fromHelsinki()) {
-                    content += `<p><br/>Tapahtuma on Helsingin tietokannasta.</p>`
+                    content += `<p><br/>Tiedot ovat Helsingin tietokannasta.</p>`
                 }
                 content += `</details>`;
             }});

@@ -30,3 +30,12 @@ section img {
 section li a {
     color: white;
 }
+
+#video-container {
+    width: 60vw;
+    padding: 0;
+}
+video {
+    width: 100%;
+    height: auto;
+}
