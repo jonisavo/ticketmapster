@@ -36,7 +36,6 @@
 
 #popup-weather li {
     text-align: center;
-    display: inline-block;
     width: 20%;
     height: 100%;
     border: 1px solid #000;
@@ -62,8 +61,12 @@
 }
 
 h4{
-    margin: 8px 0 0 0;
     width: 100%;
+    margin: 0;
+}
+
+#weekday{
+    margin: 8px 0 0 0;
 }
 
 .weatherIcon{

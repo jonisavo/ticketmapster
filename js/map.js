@@ -55,7 +55,6 @@ const MapsterMarker = L.Marker.extend({
 
     //Weather-lista viidelle päivälle.
     weather: [],
-
     events: [],
     details: null,
 
@@ -64,9 +63,9 @@ const MapsterMarker = L.Marker.extend({
     addEvent: function (eventToAdd) {
         let will_add = true;
         this.events.forEach(event => {
-           if (eventToAdd.id === event.id || eventToAdd.name === event.name) {
-               will_add = false;
-           }
+            if (eventToAdd.id === event.id || eventToAdd.name === event.name) {
+                will_add = false;
+            }
         });
         if (will_add) { this.events.push(eventToAdd); }
     },
@@ -112,6 +111,9 @@ const MapsterMarker = L.Marker.extend({
                     // Otetaan unix-ajasta päivämäärä.
                     let date = new Date(json.list[day].dt * 1000);
 
+                    // Tehdään viikonpäiville lista jotta saadaan getDay funktiolla oikea päivä.
+                    let weekDays = ['SU', 'MA', 'TI', 'KE', 'TO', 'PE', 'LA'];
+
                     // Työnnetään säätiedot listaan
                     this.weather.push(new MapsterWeather({
                         // Minimilämpötila
@@ -121,7 +123,9 @@ const MapsterMarker = L.Marker.extend({
                         // Päivämäärä
                         time: date.getDate() + '.' + (date.getMonth() + 1),
                         // Säätyypin kuva
-                        weatherIcon: json.list[day].weather[0].icon
+                        weatherIcon: json.list[day].weather[0].icon,
+                        // Viikonpäivä
+                        weekDay: weekDays[date.getDay()]
                     }));
 
                     //Päivitetään popup.
@@ -194,6 +198,7 @@ const MapsterMarker = L.Marker.extend({
         for (let i = 0; i < this.weather.length; i++) {
             content += `
                     <li>
+                        <h4 id="weekday">${this.weather[i].weekDay}</h4>
                         <h4>${this.weather[i].time}</h4>                           
                         <img class="weatherIcon" src="https://openweathermap.org/img/wn/${this.weather[i].weatherIcon}.png">     
                         <div id="tempInfo">                    
@@ -222,8 +227,8 @@ const MapsterMarker = L.Marker.extend({
             popup.options.maxHeight = map.getSize().y * 0.6;
         }
         else {
-            popup.options.minWidth = map.getSize().x * 0.5;
-            popup.options.maxWidth = map.getSize().x * 0.6;
+            popup.options.minWidth = map.getSize().x * 0.6;
+            popup.options.maxWidth = map.getSize().x * 0.7;
             popup.options.maxHeight = map.getSize().y * 0.7;
         }
         popup.update();
@@ -302,5 +307,6 @@ class MapsterWeather {
         this.maxTemp = props.maxTemp;
         this.time = props.time;
         this.weatherIcon = props.weatherIcon;
+        this.weekDay = props.weekDay
     }
 }
