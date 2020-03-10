@@ -129,6 +129,19 @@ header a, footer a {
     }
 }
 
+@media screen and (max-width: 800px) and (max-height: 600px) and (orientation: landscape) {
+    #settings {
+        min-height: 15vh;
+    }
+    #result_area {
+        min-height: 2vh;
+    }
+    #map {
+        max-height: 55vh;
+    }
+}
+
+
 @media only screen and (max-width: 600px) {
     header ul {
         flex-direction: column;
