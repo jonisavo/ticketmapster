@@ -4,6 +4,8 @@ Web-sovellus Ticketmaster-tapahtumien löytämiseen ja selaamiseen.
 Ticketmapster on tehty kolmen viikon aikana ryhmätyönä Metropolia-ammattikorkeakoulussa.
 Työn tarkoituksena oli opetella HTML, CSS ja JavaScript-kielien käyttöä.
 
+Demo: https://users.metropolia.fi/~jonisavo/ticketmapster/
+
 ## Käytetyt ohjelmistot
 Ticketmapster käyttää seuraavia kolmansien osapuolien ohjelmistoja:
 
