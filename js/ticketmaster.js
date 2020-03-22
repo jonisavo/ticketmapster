@@ -112,7 +112,7 @@ function generateTicketmasterMarkers(response) {
     // Muutetaan API:sta tulleet JSON-muotoiset eventit Event-luokan olioiksi
     foundevents.forEach(event => {
         let event_location = L.latLng(event._embedded.venues[0].location.latitude,event._embedded.venues[0].location.longitude);
-        events.push(new MapsterEvent({
+        let evt = new MapsterEvent({
             id: event.id,
             name: event.name,
             location: event_location,
@@ -121,10 +121,15 @@ function generateTicketmasterMarkers(response) {
             genre: event.classifications[0].genre.name,
             subGenre: event.classifications[0].subGenre.name,
             startDate: event.dates.start.localDate,
-            address: event._embedded.venues[0].address.line1,
             url: event.url,
             origin: "ticketmaster"
-        }));
+        });
+        if (event._embedded.venues[0] && event._embedded.venues[0].address) {
+            evt.address = event._embedded.venues[0].address.line1
+        } else {
+            evt.address = "Osoitetta ei tiedossa"
+        }
+        events.push(evt);
         // Jos tapahtumalla on uniikki sijainti, pistetään se talteen.
         // latlng-objekteja ei ilmeisesti voi verrata suoraan, joten
         // kikkailu on tarpeen.
